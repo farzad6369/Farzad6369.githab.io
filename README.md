@@ -1,8 +1,8 @@
 
-# ⭐ [farzad yazdani]
+# ⭐ Farzad Yazdani
 Frontend / Web3 Developer
 
-📧 youremail@example.com  
+📧 farzad.yazdani63@gmail.com  
 🔗 GitHub: https://github.com/yourusername  
 🔗 Portfolio: https://yourusername.github.io/
 
