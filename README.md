@@ -1,5 +1,5 @@
 
-# ⭐ [Your Name]
+# ⭐ [farzad yazdani]
 Frontend / Web3 Developer
 
 📧 youremail@example.com  
