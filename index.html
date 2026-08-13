@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>گنجینه جهانی | World Treasure</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --gold: #ffc107;
+            --gold-glow: rgba(255, 193, 7, 0.4);
+            --deep-blue: #060b16;
+            --card-bg: rgba(16, 29, 54, 0.95);
+            --accent-cyan: #00e5ff;
+            --danger-red: #ff4d6d;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+
+        body {
+            background-color: var(--deep-blue);
+            background-image: radial-gradient(circle at 50% 20%, #172d54 0%, var(--deep-blue) 80%);
+            color: #fff;
+            min-height: 100dvh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            overflow-y: auto;
+            position: relative;
+        }
+
+        /* صفحه ورود */
+        #login-screen {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: var(--deep-blue);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .login-box {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 25px;
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+        }
+
+        .login-title {
+            color: var(--gold);
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            text-align: right;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.8rem;
+            color: #8fa0c4;
+            margin-bottom: 5px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 10px;
+            color: #fff;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .gender-select {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .gender-btn {
+            background: rgba(0,0,0,0.4);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .gender-btn.active {
+            background: var(--gold);
+            color: #000;
+            font-weight: bold;
+            border-color: var(--gold);
+        }
+
+        /* محیط اصلی بازی */
+        .game-viewport {
+            display: none;
+            width: 100%;
+            max-width: 450px;
+            padding: 20px;
+            flex-direction: column;
+            gap: 15px;
+            padding-bottom: 90px;
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.35);
+            padding: 10px 18px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .brand-logo {
+            font-weight: 900;
+            color: var(--gold);
+            font-size: 0.95rem;
+        }
+
+        .player-stats {
+            display: flex;
+            gap: 10px;
+        }
+
+        .stat-pill {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .adventure-map {
+            background: var(--card-bg);
+            border-radius: 28px;
+            padding: 25px 15px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .map-title {
+            font-size: 1.1rem;
+            color: var(--gold);
+            margin-bottom: 25px;
+        }
+
+        .path-container {
+            position: relative;
+            width: 100%;
+            max-width: 280px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .path-container::before {
+            content: "";
+            position: absolute;
+            top: 25px; bottom: 25px; left: 50%;
+            width: 3px;
+            background: repeating-linear-gradient(to bottom, transparent, transparent 6px, rgba(255, 193, 7, 0.15) 6px, rgba(255, 193, 7, 0.15) 12px);
+            z-index: 1;
+            transform: translateX(-50%);
+        }
+
+        .step-node {
+            width: 50px;
+            height: 50px;
+            background: #111e38;
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 900;
+            font-size: 1.05rem;
+            border: 2px solid #23355c;
+            color: #556c9c;
+            position: relative;
+            z-index: 2;
+        }
+
+        .step-node:nth-child(even) { align-self: flex-end; }
+        .step-node:nth-child(odd) { align-self: flex-start; }
+
+        .step-node.active {
+            color: #000;
+            background: linear-gradient(135deg, var(--gold), #ff9800);
+            border-color: #fff;
+            box-shadow: 0 0 20px var(--gold);
+            transform: scale(1.15);
+        }
+
+        .step-node.completed {
+            background: #004d40;
+            border-color: var(--accent-cyan);
+            color: var(--accent-cyan);
+        }
+
+        .step-node.locked {
+            opacity: 0.5;
+            filter: grayscale(1);
+        }
+
+        .action-banner {
+            background: rgba(10, 20, 38, 0.95);
+            border: 1px solid rgba(255, 193, 7, 0.2);
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .btn-action {
+            background: linear-gradient(135deg, var(--gold) 0%, #ff9800 100%);
+            color: #000;
+            border: none;
+            padding: 14px;
+            border-radius: 14px;
+            font-size: 1.05rem;
+            font-weight: 800;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
+        }
+
+        .bottom-bar {
+            position: fixed;
+            bottom: 0; left: 0; width: 100%;
+            height: 70px;
+            background: #070d1a;
+            border-top: 1px solid rgba(255,255,255,0.06);
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            z-index: 100;
+        }
+
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #5d729c;
+            text-decoration: none;
+            gap: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .tab-item.active { color: var(--gold); }
+        .tab-icon { font-size: 1.3rem; }
+
+        .fullscreen-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(5, 10, 22, 0.98);
+            z-index: 500;
+            overflow-y: auto;
+            padding: 25px;
+        }
+
+        .overlay-box {
+            background: var(--card-bg);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 24px;
+            padding: 25px;
+            max-width: 400px;
+            margin: 40px auto;
+            position: relative;
+        }
+
+        .close-overlay {
+            position: absolute; top: 15px; left: 15px;
+            background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer;
+        }
+
+        .shop-item {
+            background: rgba(255,255,255,0.03);
+            border: 1px solid rgba(255,255,255,0.06);
+            padding: 12px;
+            border-radius: 14px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .buy-btn {
+            background: var(--gold);
+            color: #000;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .region-selector {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .region-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .region-btn.active {
+            background: var(--gold);
+            color: #000;
+            border-color: var(--gold);
+        }
+
+        .crypto-box {
+            background: #050a16;
+            border: 1px dashed var(--gold);
+            padding: 15px;
+            border-radius: 12px;
+            margin-top: 15px;
+            text-align: center;
+        }
+
+        .qr-code-img {
+            width: 140px;
+            height: 140px;
+            margin: 10px auto;
+            background: #fff;
+            padding: 5px;
+            border-radius: 10px;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- صفحه ورود و انتخاب زبان -->
+    <div id="login-screen">
+        <div class="login-box">
+            <h2 class="login-title" id="t-welcome">به گنجینه جهانی خوش آمدید</h2>
+            
+            <div class="form-group">
+                <label id="t-lang-label">زبان بازی / Language</label>
+                <select id="lang-select" class="form-control" onchange="changeLanguage(this.value)">
+                    <option value="fa">فارسی (Persian)</option>
+                    <option value="en">English</option>
+                    <option value="ar">العربية (Arabic)</option>
+                    <option value="tr">Türkçe (Turkish)</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label id="t-user-label">نام کاربری</label>
+                <input type="text" id="username-input" class="form-control" placeholder="نام خود را وارد کنید...">
+            </div>
+
+            <div class="form-group">
+                <label id="t-gender-label">جنسیت</label>
+                <div class="gender-select">
+                    <button type="button" class="gender-btn active" id="gender-male" onclick="setGender('male')">👨 مرد</button>
+                    <button type="button" class="gender-btn" id="gender-female" onclick="setGender('female')">👩 زن</button>
+                </div>
+            </div>
+
+            <button class="btn-action" id="t-start-btn" onclick="startTheGame()">شروع ماجراجویی</button>
+        </div>
+    </div>
+
+    <!-- بدنه اصلی بازی -->
+    <div class="game-viewport" id="game-view">
+        <div class="top-bar">
+            <div class="brand-logo">🏺 WORLD TREASURE</div>
+            <div class="player-stats">
+                <div class="stat-pill">❤️ <span id="hearts-count">5</span></div>
+                <div class="stat-pill">🪙 <span id="coins-count">0</span></div>
+            </div>
+        </div>
+
+        <div class="adventure-map">
+            <div class="map-title" id="t-map-title">🗺️ فصل ۱: ویرانه‌های فراموش‌شده</div>
+            <div class="path-container" id="nodes-container"></div>
+        </div>
+
+        <div class="action-banner">
+            <div id="mission-info">
+                <span id="t-active-mission" style="font-size:0.75rem; color:var(--accent-cyan); display:block; margin-bottom:4px;">مأموریت فعال</span>
+                <h3 id="current-title" style="margin-bottom:6px; color:#fff;">مأموریت ۱</h3>
+                <p id="current-desc" style="font-size:0.75rem; color:#8d9dbf;">اولین قدم برای اکتشاف معبد باستانی.</p>
+            </div>
+            <button class="btn-action" id="action-btn" onclick="openChallenge()">🧭 شروع مأموریت</button>
+        </div>
+    </div>
+
+    <!-- ناوبری پایین -->
+    <nav class="bottom-bar" id="bottom-nav" style="display:none;">
+        <a class="tab-item active" onclick="closeAllOverlays()">
+            <span class="tab-icon">🗺️</span>
+            <span id="t-nav-map">نقشه</span>
+        </a>
+        <a class="tab-item" onclick="openOverlay('competition')">
+            <span class="tab-icon">🏆</span>
+            <span id="t-nav-comp">مسابقات</span>
+        </a>
+        <a class="tab-item" onclick="openOverlay('shop')">
+            <span class="tab-icon">🛒</span>
+            <span id="t-nav-shop">بازارچه</span>
+        </a>
+    </nav>
+
+    <!-- مودال بازارچه -->
+    <div id="shop-overlay" class="fullscreen-overlay">
+        <div class="overlay-box">
+            <button class="close-overlay" onclick="closeOverlay('shop')">✕</button>
+            <h2 id="t-shop-title" style="color:var(--gold); text-align:center; margin-bottom:15px;">🛒 بازارچه تتر</h2>
+            
+            <div class="shop-item">
+                <span id="t-pack-20">❤️ ۲۰ جان اضافی</span>
+                <button class="buy-btn" onclick="selectPack('2')">۲ تتر</button>
+            </div>
+            <div class="shop-item">
+                <span id="t-pack-50">❤️ ۵۰ جان اضافی</span>
+                <button class="buy-btn" onclick="selectPack('4')">۴ تتر</button>
+            </div>
+            <div class="shop-item">
+                <span id="t-pack-100">❤️ ۱۰۰ جان اضافی</span>
+                <button class="buy-btn" onclick="selectPack('10')">۱۰ تتر</button>
+            </div>
+            <div class="shop-item">
+                <span id="t-pack-ticket">⚔️ بلیط ورود به مسابقه اصلی</span>
+                <button class="buy-btn" onclick="selectPack('3')">۳ تتر</button>
+            </div>
+
+            <div id="payment-gateways" style="display:none; margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px;">
+                <p id="t-region-prompt" style="font-size:0.8rem; text-align:center; margin-bottom:10px;">انتخاب منطقه پرداخت:</p>
+                <div class="region-selector">
+                    <button class="region-btn active" id="btn-ir" onclick="switchRegion('IR')">🇮🇷 ایران (بیت‌پین)</button>
+                    <button class="region-btn" id="btn-global" onclick="switchRegion('GLOBAL')">🌐 بین‌المللی</button>
+                </div>
+            </div>
+
+            <div id="crypto-payment" class="crypto-box" style="display:none;">
+                <h4 style="color:var(--gold); margin-bottom:5px;">💳 فاکتور پرداخت (TRC20)</h4>
+                <p style="font-size:0.85rem; margin-bottom:5px;"><span id="t-amount">مبلغ:</span> <strong id="pay-amt" style="color:var(--gold);">0</strong> تتر</p>
+                <div id="payment-details-content"></div>
+                <input type="text" id="txid-input" style="width:100%; padding:10px; margin-top:15px; border-radius:6px; border:1px solid #333; background:#000; color:#fff; text-align:center;" placeholder="کد تراکنش (TxID)">
+                <button class="btn-action" id="t-submit-tx" style="padding:10px; font-size:0.9rem;" onclick="submitTx()">ثبت تراکنش</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- مودال مسابقات -->
+    <div id="competition-overlay" class="fullscreen-overlay">
+        <div class="overlay-box">
+            <button class="close-overlay" onclick="closeOverlay('competition')">✕</button>
+            <h2 id="t-comp-title" style="color:var(--gold); text-align:center; margin-bottom:15px;">🏆 مسابقه هفتگی تتر</h2>
+            <div id="comp-content" style="text-align:center; font-size:0.85rem; line-height:1.7;"></div>
+        </div>
+    </div>
+
+    <!-- مودال چالش بازی -->
+    <div id="game-modal" class="fullscreen-overlay">
+        <div class="overlay-box" style="text-align:center;">
+            <button class="close-overlay" onclick="closeGame()">✕</button>
+            <h3 id="challenge-title" style="color:var(--gold); margin-bottom:15px;">چالش مأموریت</h3>
+            <p id="challenge-desc" style="color:#b7c4df; margin-bottom:20px; font-size:0.9rem;"></p>
+            <div id="challenge-options" style="display:grid; gap:10px;"></div>
+            <p id="challenge-result" style="margin-top:15px; font-weight:bold;"></p>
+        </div>
+    </div>
+
+    <script>
+        const tg = window.Telegram ? window.Telegram.WebApp : null;
+        if(tg) { tg.ready(); tg.expand(); }
+
+        const walletGlobal = "TPNARMXa2rTfuigwvXAxKDsfPXQgpshxKY"; // آدرس ترون لینک (TRC20) شما برای کاربران خارج از ایران
+        const walletIR = "TPNARMXa2rTfuigwvXAxKDsfPXQgpshxKY";     // آدرس ولت بیت پین شما برای کاربران داخل ایران (TRC20)
+
+        let playerStage = 1;
+        let hearts = 5;
+        let selectedGender = 'male';
+        let currentLang = 'fa';
+        let currentRegion = 'IR';
+
+        // دیکشنری چندزبانه کامل
+        const dict = {
+            fa: {
+                welcome: "به گنجینه جهانی خوش آمدید",
+                langLabel: "زبان بازی / Language",
+                userLabel: "نام کاربری",
+                genderLabel: "جنسیت",
+                male: "👨 مرد",
+                female: "👩 زن",
+                startBtn: "شروع ماجراجویی",
+                mapTitle: "🗺️ فصل ۱: ویرانه‌های فراموش‌شده",
+                activeMission: "مأموریت فعال",
+                startMissionBtn: "🧭 شروع مأموریت",
+                navMap: "نقشه",
+                navComp: "مسابقات",
+                navShop: "بازارچه",
+                shopTitle: "🛒 بازارچه تتر",
+                pack20: "❤️ ۲۰ جان اضافی",
+                pack50: "❤️ ۵۰ جان اضافی",
+                pack100: "❤️ ۱۰۰ جان اضافی",
+                packTicket: "⚔️ بلیط ورود به مسابقه اصلی",
+                regionPrompt: "انتخاب منطقه پرداخت:",
+                irBtn: "🇮🇷 ایران (بیت‌پین)",
+                globalBtn: "🌐 بین‌المللی",
+                amount: "مبلغ:",
+                submitTx: "ثبت تراکنش",
+                compTitle: "🏆 مسابقه هفتگی تتر",
+                compLocked: "🔒 مسابقه اصلی قفل است! ابتدا ۱۰ مأموریت مقدماتی را تمام کنید.",
+                compOpen: "⚔️ ورودی مسابقات هفتگی فعال است! جایزه نفر اول: ۵۰ تتر.",
+                correct: "✅ پاسخ درست بود! مرحله بعد باز شد.",
+                wrong: "❌ پاسخ اشتباه بود! یک جان کم شد."
+            },
+            en: {
+                welcome: "Welcome to World Treasure",
+                langLabel: "Language",
+                userLabel: "Username",
+                genderLabel: "Gender",
+                male: "👨 Male",
+                female: "👩 Female",
+                startBtn: "Start Adventure",
+                mapTitle: "🗺️ Chapter 1: Forgotten Ruins",
+                activeMission: "Active Mission",
+                startMissionBtn: "🧭 Start Mission",
+                navMap: "Map",
+                navComp: "Tournaments",
+                navShop: "Shop",
+                shopTitle: "🛒 USDT Shop",
+                pack20: "❤️ +20 Hearts",
+                pack50: "❤️ +50 Hearts",
+                pack100: "❤️ +100 Hearts",
+                packTicket: "⚔️ Main Tournament Ticket",
+                regionPrompt: "Select Region:",
+                irBtn: "🇮🇷 Iran (Bitpin)",
+                globalBtn: "🌐 Global",
+                amount: "Amount:",
+                submitTx: "Submit Transaction",
+                compTitle: "🏆 Weekly USDT Tournament",
+                compLocked: "🔒 Main tournament is locked! Complete 10 introductory missions first.",
+                compOpen: "⚔️ Weekly tournament is open! 1st Prize: 50 USDT.",
+                correct: "✅ Correct answer! Next stage unlocked.",
+                wrong: "❌ Incorrect! You lost a heart."
+            },
+            ar: {
+                welcome: "مرحباً بك في الكنز العالمي",
+                langLabel: "اللغة",
+                userLabel: "اسم المستخدم",
+                genderLabel: "الجنس",
+                male: "👨 ذكر",
+                female: "👩 أنثى",
+                startBtn: "ابدأ المغامرة",
+                mapTitle: "🗺️ الفصل 1: الآثار المنسية",
+                activeMission: "المهمة النشطة",
+                startMissionBtn: "🧭 ابدأ المهمة",
+                navMap: "الخريطة",
+                navComp: "المسابقة",
+                navShop: "المتجر",
+                shopTitle: "🛒 متجر USDT",
+                pack20: "❤️ +20 قلوب",
+                pack50: "❤️ +50 قلوب",
+                pack100: "❤️ +100 قلوب",
+                packTicket: "⚔️ تذكرة البطولات",
+                regionPrompt: "اختر المنطقة:",
+                irBtn: "🇮🇷 إيران",
+                globalBtn: "🌐 دولي",
+                amount: "المبلغ:",
+                submitTx: "إرسال المعاملة",
+                compTitle: "🏆 بطولة USDT الأسبوعية",
+                compLocked: "🔒 البطولة مقفلة! أكمل أول 10 مهام أولاً.",
+                compOpen: "⚔️ البطولة مفتوحة! الجائزة الأولى: 50 USDT.",
+                correct: "✅ إجابة صحيحة!",
+                wrong: "❌ إجابة خاطئة!"
+            },
+            tr: {
+                welcome: "Dünya Hazinesi'ne Hoş Geldiniz",
+                langLabel: "Dil",
+                userLabel: "Kullanıcı Adı",
+                genderLabel: "Cinsiyet",
+                male: "👨 Erkek",
+                female: "👩 Kadın",
+                startBtn: "Macera Başlasın",
+                mapTitle: "🗺️ Bölüm 1: Unutulmuş Harabeler",
+                activeMission: "Aktif Görev",
+                startMissionBtn: "🧭 Görevi Başlat",
+                navMap: "Harita",
+                navComp: "Turnuva",
+                navShop: "Mağaza",
+                shopTitle: "🛒 USDT Mağazası",
+                pack20: "❤️ +20 Kalp",
+                pack50: "❤️ +50 Kalp",
+                pack100: "❤️ +100 Kalp",
+                packTicket: "⚔️ Turnuva Bileti",
+                regionPrompt: "Bölge Seçin:",
+                irBtn: "🇮🇷 İran",
+                globalBtn: "🌐 Küresel",
+                amount: "Tutar:",
+                submitTx: "İşlemi Gönder",
+                compTitle: "🏆 Haftalık USDT Turnuvası",
+                compLocked: "🔒 Turnuva kilitli! Önce 10 görevi tamamlayın.",
+                compOpen: "⚔️ Turnuva açık! 1. Ödül: 50 USDT.",
+                correct: "✅ Doğru cevap!",
+                wrong: "❌ Yanlış cevap!"
+            }
+        };
+
+        const challenges = [
+            { title: "رمز ورودی معبد", desc: "کدام گزینه برای باز کردن دروازه مناسب است؟", options: ["کلید طلایی", "سنگ معمولی", "چوب خشک"], answer: 0 },
+            { title: "عبور از تله‌ها", desc: "برای عبور امن کدام مسیر را انتخاب می‌کنی؟", options: ["مسیر علامت‌دار", "مسیر تاریک", "مسیر پردود"], answer: 0 },
+            { title: "معمای آینه‌ها", desc: "نور باید به کجا تابانده شود؟", options: ["بلور آبی", "دیوار سنگی", "صندوق چوبی"], answer: 0 },
+            { title: "چشمه شفابخش", desc: "برای بازیابی انرژی چه می‌کنی؟", options: ["نوشیدن آب چشمه", "شکستن چشمه", "ترک معبد"], answer: 0 },
+            { title: "معبر فروریخته", desc: "برای رد شدن از شکاف چه نیاز است؟", options: ["طناب", "مشعل خاموش", "سکه"], answer: 0 },
+            { title: "دروازه مومیایی", desc: "دروازه با چه چیزی باز می‌شود؟", options: ["کلید طلایی", "شن", "پارچه"], answer: 0 },
+            { title: "مقبره طلا", desc: "کدام صندوقچه را انتخاب می‌کنی؟", options: ["صندوق خورشید", "صندوق شکسته", "صندوق ساده"], answer: 0 },
+            { title: "هزارتوی بادها", desc: "کدام مسیر خروج است؟", options: ["مسیر پرچم‌دار", "مسیر بدون نور", "مسیر بسته"], answer: 0 },
+            { title: "پل سایه‌ها", desc: "به کدام قسمت پل نگاه می‌کنی؟", options: ["تخته‌های سالم", "تخته‌های شکسته", "لبه پرتگاه"], answer: 0 },
+            { title: "قلب گنجینه", desc: "وسیله نهایی برای گبرگشایی؟", options: ["نشان طلایی", "سنگ سیاه", "مشعل"], answer: 0 }
+        ];
+
+        function changeLanguage(lang) {
+            currentLang = lang;
+            const t = dict[lang];
+            
+            document.documentElement.lang = lang;
+            document.documentElement.dir = (lang === 'fa' || lang === 'ar') ? 'rtl' : 'ltr';
+
+            document.getElementById('t-welcome').textContent = t.welcome;
+            document.getElementById('t-lang-label').textContent = t.langLabel;
+            document.getElementById('t-user-label').textContent = t.userLabel;
+            document.getElementById('t-gender-label').textContent = t.genderLabel;
+            document.getElementById('gender-male').textContent = t.male;
+            document.getElementById('gender-female').textContent = t.female;
+            document.getElementById('t-start-btn').textContent = t.startBtn;
+            document.getElementById('t-map-title').textContent = t.mapTitle;
+            document.getElementById('t-active-mission').textContent = t.activeMission;
+            document.getElementById('action-btn').textContent = t.startMissionBtn;
+            document.getElementById('t-nav-map').textContent = t.navMap;
+            document.getElementById('t-nav-comp').textContent = t.navComp;
+            document.getElementById('t-nav-shop').textContent = t.navShop;
+            document.getElementById('t-shop-title').textContent = t.shopTitle;
+            document.getElementById('t-pack-20').textContent = t.pack20;
+            document.getElementById('t-pack-50').textContent = t.pack50;
+            document.getElementById('t-pack-100').textContent = t.pack100;
+            document.getElementById('t-pack-ticket').textContent = t.packTicket;
+            document.getElementById('t-region-prompt').textContent = t.regionPrompt;
+            document.getElementById('btn-ir').textContent = t.irBtn;
+            document.getElementById('btn-global').textContent = t.globalBtn;
+            document.getElementById('t-amount').textContent = t.amount;
+            document.getElementById('t-submit-tx').textContent = t.submitTx;
+            document.getElementById('t-comp-title').textContent = t.compTitle;
+        }
+
+        function setGender(gender) {
+            selectedGender = gender;
+            document.getElementById('gender-male').classList.toggle('active', gender === 'male');
+            document.getElementById('gender-female').classList.toggle('active', gender === 'female');
+        }
+
+        function startTheGame() {
+            const usernameInput = document.getElementById("username-input");
+            const loginScreen = document.getElementById("login-screen");
+            const gameView = document.getElementById("game-view");
+            const bottomNav = document.getElementById("bottom-nav");
+
+            if (!usernameInput || !loginScreen || !gameView || !bottomNav) {
+                alert("خطا: یکی از بخش‌های صفحه پیدا نشد.");
+                return;
+            }
+
+            const username = usernameInput.value.trim();
+
+            if (username === "") {
+                alert("لطفاً نام کاربری را وارد کنید.");
+                usernameInput.focus();
+                return;
+            }
+
+            localStorage.setItem("worldTreasureUsername", username);
+            localStorage.setItem("worldTreasureGender", selectedGender);
+            localStorage.setItem("worldTreasureLanguage", currentLang);
+
+            loginScreen.style.display = "none";
+            gameView.style.display = "flex";
+            bottomNav.style.display = "grid";
+
+            renderMap();
+        }
+
+        function renderMap() {
+            const container = document.getElementById('nodes-container');
+            container.innerHTML = "";
+            for(let i = 1; i <= 10; i++) {
+                let nodeClass = "step-node locked";
+                let content = i === 10 ? "🏆" : i;
+                if (i < playerStage) nodeClass = "step-node completed";
+                else if (i === playerStage) nodeClass = "step-node active";
+                container.innerHTML += `<div class="${nodeClass}">${content}</div>`;
+            }
+        }
+
+        function openChallenge() {
+            if (playerStage > 10) {
+                openOverlay('competition');
+                return;
+            }
+            if (hearts <= 0) {
+                alert(currentLang === 'fa' ? 'جان کافی ندارید!' : 'Not enough hearts!');
+                return;
+            }
+
+            const challenge = challenges[playerStage - 1];
+            document.getElementById('challenge-title').textContent = challenge.title;
+            document.getElementById('challenge-desc').textContent = challenge.desc;
+            document.getElementById('challenge-result').textContent = "";
+            
+            const optionsBox = document.getElementById('challenge-options');
+            optionsBox.innerHTML = "";
+
+            challenge.options.forEach((opt, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "btn-action";
+                btn.style.margin = "0";
+                btn.style.padding = "10px";
+                btn.style.f
