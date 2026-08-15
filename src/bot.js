@@ -1,19 +1,216 @@
-import TelegramBot from 'node-telegram-bot-api';
-import dotenv from 'dotenv';
+import TelegramBot from "node-telegram-bot-api";
+import dotenv from "dotenv";
 
 dotenv.config();
 
-const token = process.env.TELEGRAM_BOT_TOKEN;
+const token =
+  process.env.TELEGRAM_BOT_TOKEN;
 
-if (token) {
-  const bot = new TelegramBot(token, { polling: true });
+const webAppUrl =
+  process.env.WEB_APP_URL;
 
-  bot.onText(/\/start(?: (.+))?/, (message) => {
-    bot.sendMessage(message.chat.id, 'به گنجینه جهانی خوش آمدید! برای شروع بازی، وب‌اپ را باز کنید.');
-  });
 
-  bot.on('polling_error', (error) => console.error('Telegram bot error:', error.message));
-  console.log('Telegram bot is running');
+if (!token) {
+
+  console.log(
+    "⚠️ TELEGRAM_BOT_TOKEN is empty"
+  );
+
+} else if (!webAppUrl) {
+
+  console.log(
+    "⚠️ WEB_APP_URL is empty"
+  );
+
 } else {
-  console.log('Telegram bot is disabled because TELEGRAM_BOT_TOKEN is empty');
+
+  const bot =
+    new TelegramBot(
+      token,
+      { polling: true }
+    );
+
+
+  /* ================================
+     START
+  ================================= */
+
+  bot.onText(
+    /\/start(?: (.+))?/,
+    async (message, match) => {
+
+      const chatId =
+        message.chat.id;
+
+      const firstName =
+        message.from?.first_name ||
+        "بازیکن";
+
+
+      const referralCode =
+        match?.[1] || "";
+
+
+      let text =
+`🌍 WORLD VAULT
+
+سلام ${firstName} 👋
+
+🏆 مسابقه بزرگ ۷ روزه
+🎯 ۷۰ مأموریت
+❤️ سیستم جان
+🏅 لیدربورد جهانی
+💰 جایزه نفرات برتر
+
+برای ورود به گنجینه آماده‌ای؟`;
+
+
+      if (referralCode) {
+
+        text +=
+          `\n\n🎁 کد دعوت شما:
+${referralCode}`;
+
+      }
+
+
+      await bot.sendMessage(
+        chatId,
+        text,
+        {
+          reply_markup: {
+
+            inline_keyboard: [
+
+              [
+                {
+                  text:
+                    "🎮 شروع بازی",
+                  web_app: {
+                    url:
+                      webAppUrl
+                  }
+                }
+              ],
+
+              [
+                {
+                  text:
+                    "🏆 لیدربورد",
+                  web_app: {
+                    url:
+                      webAppUrl +
+                      "?page=leaderboard"
+                  }
+                }
+              ]
+
+            ]
+
+          }
+
+        }
+      );
+
+    }
+  );
+
+
+  /* ================================
+     HELP
+  ================================= */
+
+  bot.onText(
+    /\/help/,
+    async (message) => {
+
+      await bot.sendMessage(
+        message.chat.id,
+
+`🌍 WORLD VAULT
+
+🎮 /start
+شروع بازی
+
+🏆 /leaderboard
+مشاهده رتبه‌بندی
+
+ℹ️ /help
+راهنما`
+      );
+
+    }
+  );
+
+
+  /* ================================
+     LEADERBOARD
+  ================================= */
+
+  bot.onText(
+    /\/leaderboard/,
+    async (message) => {
+
+      await bot.sendMessage(
+
+        message.chat.id,
+
+`🏆 لیدربورد WORLD VAULT
+
+برای مشاهده رتبه‌بندی کامل، روی دکمه زیر بزنید.`,
+
+        {
+
+          reply_markup: {
+
+            inline_keyboard: [
+
+              [
+                {
+                  text:
+                    "🏆 مشاهده لیدربورد",
+
+                  web_app: {
+                    url:
+                      webAppUrl +
+                      "?page=leaderboard"
+                  }
+
+                }
+
+              ]
+
+            ]
+
+          }
+
+        }
+
+      );
+
+    }
+  );
+
+
+  /* ================================
+     ERRORS
+  ================================= */
+
+  bot.on(
+    "polling_error",
+    (error) => {
+
+      console.error(
+        "Telegram Bot Error:",
+        error.message
+      );
+
+    }
+  );
+
+
+  console.log(
+    "🤖 WORLD VAULT Telegram Bot is running"
+  );
+
 }
