@@ -1,764 +1,1557 @@
 <!DOCTYPE html>
 <html lang="fa" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>گنجینه جهانی | World Treasure</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <style>
-        :root {
-            --gold: #ffc107;
-            --gold-glow: rgba(255, 193, 7, 0.4);
-            --deep-blue: #060b16;
-            --card-bg: rgba(16, 29, 54, 0.95);
-            --accent-cyan: #00e5ff;
-            --danger-red: #ff4d6d;
-        }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>WORLD VAULT | مسابقه جهانی</title>
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: 'Segoe UI', Tahoma, sans-serif;
-            user-select: none;
-            -webkit-user-select: none;
-        }
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
 
-        body {
-            background-color: var(--deep-blue);
-            background-image: radial-gradient(circle at 50% 20%, #172d54 0%, var(--deep-blue) 80%);
-            color: #fff;
-            min-height: 100dvh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow-x: hidden;
-            overflow-y: auto;
-            position: relative;
-        }
+<style>
+:root{
+ --bg:#050914;
+ --card:#0d1b2d;
+ --card2:#12263d;
+ --gold:#ffd54a;
+ --cyan:#19d9ff;
+ --green:#35df8a;
+ --red:#ff4059;
+ --text:#fff;
+ --muted:#91a8bd;
+}
 
-        /* صفحه ورود */
-        #login-screen {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: var(--deep-blue);
-            z-index: 1000;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-        }
+*{
+ box-sizing:border-box;
+ margin:0;
+ padding:0;
+ font-family:Tahoma,"Segoe UI",sans-serif;
+ user-select:none;
+}
 
-        .login-box {
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 25px;
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
-        }
+body{
+ min-height:100vh;
+ background:
+ radial-gradient(circle at 50% 0%,#18365b 0,#07101e 42%,#03060d 100%);
+ color:var(--text);
+}
 
-        .login-title {
-            color: var(--gold);
-            font-size: 1.4rem;
-            margin-bottom: 20px;
-            text-shadow: 0 0 10px var(--gold-glow);
-        }
+button{
+ font-family:inherit;
+ cursor:pointer;
+}
 
-        .form-group {
-            margin-bottom: 15px;
-            text-align: right;
-        }
+#app{
+ width:100%;
+ max-width:760px;
+ margin:auto;
+ padding:12px;
+}
 
-        .form-group label {
-            display: block;
-            font-size: 0.8rem;
-            color: #8fa0c4;
-            margin-bottom: 5px;
-        }
+.header{
+ background:linear-gradient(135deg,#142e4d,#081421);
+ border:1px solid #315576;
+ border-radius:22px;
+ padding:17px;
+ box-shadow:0 15px 40px #0009;
+}
 
-        .form-control {
-            width: 100%;
-            padding: 12px;
-            background: rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.1);
-            border-radius: 10px;
-            color: #fff;
-            font-size: 0.95rem;
-            outline: none;
-        }
+.logo{
+ font-size:27px;
+ font-weight:900;
+ color:var(--gold);
+ text-shadow:0 0 18px #ffd54a55;
+}
 
-        .gender-select {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin-top: 5px;
-        }
+.subtitle{
+ color:var(--muted);
+ font-size:12px;
+ margin-top:5px;
+}
 
-        .gender-btn {
-            background: rgba(0,0,0,0.4);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #fff;
-            padding: 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
+.profile{
+ display:flex;
+ align-items:center;
+ gap:10px;
+ margin-top:14px;
+ background:#07111d;
+ padding:10px;
+ border-radius:14px;
+}
 
-        .gender-btn.active {
-            background: var(--gold);
-            color: #000;
-            font-weight: bold;
-            border-color: var(--gold);
-        }
+.avatar{
+ width:45px;
+ height:45px;
+ border-radius:50%;
+ background:linear-gradient(135deg,#ffd54a,#ff8a00);
+ display:flex;
+ align-items:center;
+ justify-content:center;
+ font-size:24px;
+}
 
-        /* محیط اصلی بازی */
-        .game-viewport {
-            display: none;
-            width: 100%;
-            max-width: 450px;
-            padding: 20px;
-            flex-direction: column;
-            gap: 15px;
-            padding-bottom: 90px;
-        }
+.profile-name{
+ font-weight:bold;
+}
 
-        .top-bar {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            background: rgba(0, 0, 0, 0.35);
-            padding: 10px 18px;
-            border-radius: 50px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
+.profile-small{
+ font-size:11px;
+ color:var(--muted);
+ margin-top:3px;
+}
 
-        .brand-logo {
-            font-weight: 900;
-            color: var(--gold);
-            font-size: 0.95rem;
-        }
+.timer{
+ margin-top:12px;
+ background:#03070d;
+ border:1px solid #294761;
+ border-radius:15px;
+ padding:12px;
+ text-align:center;
+}
 
-        .player-stats {
-            display: flex;
-            gap: 10px;
-        }
+.timer-label{
+ color:var(--muted);
+ font-size:11px;
+}
 
-        .stat-pill {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: bold;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
+#timer{
+ color:var(--cyan);
+ font-size:32px;
+ font-weight:900;
+ letter-spacing:2px;
+ margin:4px;
+}
 
-        .adventure-map {
-            background: var(--card-bg);
-            border-radius: 28px;
-            padding: 25px 15px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.6);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
+#timerMessage{
+ color:var(--muted);
+ font-size:11px;
+}
 
-        .map-title {
-            font-size: 1.1rem;
-            color: var(--gold);
-            margin-bottom: 25px;
-        }
+.danger{
+ background:
+ radial-gradient(circle at 50% 0%,#7d0c1b,#25070c 45%,#05070b 100%) !important;
+}
 
-        .path-container {
-            position: relative;
-            width: 100%;
-            max-width: 280px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
+.danger #timer{
+ color:#ff334f;
+ text-shadow:0 0 18px #ff334f;
+ animation:pulse .8s infinite alternate;
+}
 
-        .path-container::before {
-            content: "";
-            position: absolute;
-            top: 25px; bottom: 25px; left: 50%;
-            width: 3px;
-            background: repeating-linear-gradient(to bottom, transparent, transparent 6px, rgba(255, 193, 7, 0.15) 6px, rgba(255, 193, 7, 0.15) 12px);
-            z-index: 1;
-            transform: translateX(-50%);
-        }
+@keyframes pulse{
+ from{opacity:.65}
+ to{opacity:1}
+}
 
-        .step-node {
-            width: 50px;
-            height: 50px;
-            background: #111e38;
-            border-radius: 50%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-weight: 900;
-            font-size: 1.05rem;
-            border: 2px solid #23355c;
-            color: #556c9c;
-            position: relative;
-            z-index: 2;
-        }
+.stats{
+ display:grid;
+ grid-template-columns:repeat(3,1fr);
+ gap:7px;
+ margin-top:10px;
+}
 
-        .step-node:nth-child(even) { align-self: flex-end; }
-        .step-node:nth-child(odd) { align-self: flex-start; }
+.stat{
+ background:#0b1929;
+ border-radius:13px;
+ padding:9px;
+ text-align:center;
+}
 
-        .step-node.active {
-            color: #000;
-            background: linear-gradient(135deg, var(--gold), #ff9800);
-            border-color: #fff;
-            box-shadow: 0 0 20px var(--gold);
-            transform: scale(1.15);
-        }
+.stat strong{
+ display:block;
+ color:var(--gold);
+ font-size:20px;
+}
 
-        .step-node.completed {
-            background: #004d40;
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-        }
+.stat span{
+ color:var(--muted);
+ font-size:10px;
+}
 
-        .step-node.locked {
-            opacity: 0.5;
-            filter: grayscale(1);
-        }
+.section{
+ background:rgba(10,25,42,.95);
+ border:1px solid #213c56;
+ border-radius:18px;
+ padding:13px;
+ margin-top:12px;
+ box-shadow:0 8px 25px #0005;
+}
 
-        .action-banner {
-            background: rgba(10, 20, 38, 0.95);
-            border: 1px solid rgba(255, 193, 7, 0.2);
-            border-radius: 20px;
-            padding: 15px;
-            text-align: center;
-            margin-top: 15px;
-        }
+.section-title{
+ font-size:18px;
+ font-weight:bold;
+ margin-bottom:10px;
+}
 
-        .btn-action {
-            background: linear-gradient(135deg, var(--gold) 0%, #ff9800 100%);
-            color: #000;
-            border: none;
-            padding: 14px;
-            border-radius: 14px;
-            font-size: 1.05rem;
-            font-weight: 800;
-            cursor: pointer;
-            width: 100%;
-            margin-top: 10px;
-            box-shadow: 0 5px 15px rgba(255, 193, 7, 0.4);
-        }
+.days{
+ display:flex;
+ gap:6px;
+ overflow-x:auto;
+ padding:10px 0 2px;
+}
 
-        .bottom-bar {
-            position: fixed;
-            bottom: 0; left: 0; width: 100%;
-            height: 70px;
-            background: #070d1a;
-            border-top: 1px solid rgba(255,255,255,0.06);
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            z-index: 100;
-        }
+.day{
+ flex:0 0 72px;
+ background:#0b1929;
+ border:1px solid #28445c;
+ border-radius:12px;
+ padding:9px 5px;
+ text-align:center;
+ color:white;
+}
 
-        .tab-item {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            color: #5d729c;
-            text-decoration: none;
-            gap: 4px;
-            font-size: 0.75rem;
-            font-weight: bold;
-            cursor: pointer;
-        }
+.day.active{
+ border-color:var(--cyan);
+ background:#123b55;
+ box-shadow:0 0 12px #19d9ff22;
+}
 
-        .tab-item.active { color: var(--gold); }
-        .tab-icon { font-size: 1.3rem; }
+.day.final{
+ border-color:var(--red);
+}
 
-        .fullscreen-overlay {
-            display: none;
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(5, 10, 22, 0.98);
-            z-index: 500;
-            overflow-y: auto;
-            padding: 25px;
-        }
+.day.done{
+ border-color:var(--green);
+}
 
-        .overlay-box {
-            background: var(--card-bg);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 24px;
-            padding: 25px;
-            max-width: 400px;
-            margin: 40px auto;
-            position: relative;
-        }
+.day-number{
+ font-weight:bold;
+ font-size:14px;
+}
 
-        .close-overlay {
-            position: absolute; top: 15px; left: 15px;
-            background: none; border: none; color: #fff; font-size: 1.3rem; cursor: pointer;
-        }
+.day-info{
+ font-size:9px;
+ color:var(--muted);
+ margin-top:4px;
+}
 
-        .shop-item {
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.06);
-            padding: 12px;
-            border-radius: 14px;
-            margin-bottom: 10px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+.mission{
+ background:#11283d;
+ border-right:4px solid var(--cyan);
+ border-radius:12px;
+ padding:12px;
+ margin:9px 0;
+}
 
-        .buy-btn {
-            background: var(--gold);
-            color: #000;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-        }
+.mission.hard{
+ border-right-color:var(--gold);
+}
 
-        .region-selector {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 10px;
-            margin: 15px 0;
-        }
+.mission.final{
+ border-right-color:var(--red);
+ box-shadow:0 0 15px #ff405922;
+}
 
-        .region-btn {
-            background: rgba(255,255,255,0.05);
-            border: 1px solid rgba(255,255,255,0.1);
-            color: #fff;
-            padding: 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            font-weight: bold;
-        }
+.mission-title{
+ font-size:11px;
+ color:var(--gold);
+ font-weight:bold;
+}
 
-        .region-btn.active {
-            background: var(--gold);
-            color: #000;
-            border-color: var(--gold);
-        }
+.question{
+ font-size:14px;
+ font-weight:bold;
+ line-height:1.8;
+ margin-top:7px;
+}
 
-        .crypto-box {
-            background: #050a16;
-            border: 1px dashed var(--gold);
-            padding: 15px;
-            border-radius: 12px;
-            margin-top: 15px;
-            text-align: center;
-        }
+.answers{
+ display:grid;
+ gap:7px;
+ margin-top:9px;
+}
 
-        .qr-code-img {
-            width: 140px;
-            height: 140px;
-            margin: 10px auto;
-            background: #fff;
-            padding: 5px;
-            border-radius: 10px;
-            display: block;
-        }
-    </style>
+.answer{
+ width:100%;
+ padding:11px;
+ border:1px solid #31516a;
+ border-radius:10px;
+ background:#173149;
+ color:#fff;
+ text-align:right;
+}
+
+.answer:hover{
+ background:#20425e;
+}
+
+.answer.correct{
+ background:#08734b;
+ border-color:var(--green);
+}
+
+.answer.wrong{
+ background:#762033;
+ border-color:var(--red);
+}
+
+.answer:disabled{
+ opacity:.95;
+}
+
+.box{
+ background:#0c1b2b;
+ border-radius:12px;
+ padding:11px;
+ color:#b4c8d8;
+ font-size:12px;
+ line-height:2;
+}
+
+.packages{
+ display:grid;
+ gap:8px;
+}
+
+.package{
+ display:flex;
+ align-items:center;
+ justify-content:space-between;
+ gap:8px;
+ background:#10273c;
+ border:1px solid #284a63;
+ border-radius:12px;
+ padding:11px;
+}
+
+.package-name{
+ font-weight:bold;
+}
+
+.package-price{
+ color:var(--gold);
+ font-weight:bold;
+}
+
+.buy{
+ border:0;
+ border-radius:10px;
+ padding:9px 12px;
+ background:linear-gradient(90deg,#e7a916,#ffd54a);
+ color:#211700;
+ font-weight:900;
+}
+
+.special{
+ border-color:var(--gold);
+ background:linear-gradient(135deg,#33250d,#0d1d2b);
+}
+
+.special .package-name{
+ color:var(--gold);
+}
+
+.leader{
+ display:grid;
+ gap:8px;
+}
+
+.player{
+ display:grid;
+ grid-template-columns:42px 1fr auto;
+ align-items:center;
+ gap:8px;
+ background:#10273b;
+ border-radius:12px;
+ padding:10px;
+}
+
+.medal{
+ font-size:25px;
+}
+
+.player-name{
+ font-weight:bold;
+}
+
+.player-small{
+ color:var(--muted);
+ font-size:10px;
+ margin-top:3px;
+}
+
+.prize{
+ color:var(--gold);
+ font-weight:900;
+ text-align:left;
+}
+
+.feature{
+ display:grid;
+ gap:8px;
+}
+
+.feature button{
+ width:100%;
+}
+
+.primary{
+ width:100%;
+ border:0;
+ border-radius:12px;
+ padding:13px;
+ background:linear-gradient(90deg,#0abfe0,#28e0ff);
+ color:#00151c;
+ font-weight:900;
+}
+
+.notice{
+ color:#9eb4c5;
+ font-size:11px;
+ line-height:1.9;
+}
+
+.footer{
+ text-align:center;
+ color:#60778c;
+ font-size:10px;
+ padding:20px 0 30px;
+}
+</style>
 </head>
+
 <body>
 
-    <!-- صفحه ورود و انتخاب زبان -->
-    <div id="login-screen">
-        <div class="login-box">
-            <h2 class="login-title" id="t-welcome">به گنجینه جهانی خوش آمدید</h2>
-            
-            <div class="form-group">
-                <label id="t-lang-label">زبان بازی / Language</label>
-                <select id="lang-select" class="form-control" onchange="changeLanguage(this.value)">
-                    <option value="fa">فارسی (Persian)</option>
-                    <option value="en">English</option>
-                    <option value="ar">العربية (Arabic)</option>
-                    <option value="tr">Türkçe (Turkish)</option>
-                </select>
-            </div>
+<div id="app">
 
-            <div class="form-group">
-                <label id="t-user-label">نام کاربری</label>
-                <input type="text" id="username-input" class="form-control" placeholder="نام خود را وارد کنید...">
-            </div>
+<header class="header">
 
-            <div class="form-group">
-                <label id="t-gender-label">جنسیت</label>
-                <div class="gender-select">
-                    <button type="button" class="gender-btn active" id="gender-male" onclick="setGender('male')">👨 مرد</button>
-                    <button type="button" class="gender-btn" id="gender-female" onclick="setGender('female')">👩 زن</button>
-                </div>
-            </div>
+<div class="logo">🌍 WORLD VAULT</div>
 
-            <button class="btn-action" id="t-start-btn" onclick="startTheGame()">شروع ماجراجویی</button>
-        </div>
+<div class="subtitle">
+مسابقه جهانی ۷ روزه — ۷۰ مأموریت
+</div>
+
+<div class="profile">
+
+<div class="avatar" id="avatar">🧑</div>
+
+<div>
+<div class="profile-name" id="playerName">بازیکن مهمان</div>
+<div class="profile-small">بازیکن مسابقه جهانی</div>
+</div>
+
+</div>
+
+<div class="timer">
+
+<div class="timer-label">
+⏱️ زمان باقی‌مانده مسابقه
+</div>
+
+<div id="timer">168:00:00</div>
+
+<div id="timerMessage">
+مسابقه در جریان است
+</div>
+
+</div>
+
+<div class="stats">
+
+<div class="stat">
+<strong id="score">0</strong>
+<span>امتیاز</span>
+</div>
+
+<div class="stat">
+<strong id="lives">100</strong>
+<span>❤️ جان</span>
+</div>
+
+<div class="stat">
+<strong id="rank">—</strong>
+<span>رتبه</span>
+</div>
+
+</div>
+
+</header>
+
+
+<section class="section">
+
+<div class="section-title">
+📅 ۷ روز مسابقه
+</div>
+
+<div class="days" id="days"></div>
+
+</section>
+
+
+<section class="section">
+
+<div class="section-title" id="dayTitle">
+روز ۱
+</div>
+
+<div id="missions"></div>
+
+</section>
+
+
+<section class="section">
+
+<div class="section-title">
+🏆 سه نفر برتر
+</div>
+
+<div class="leader">
+
+<div class="player">
+<div class="medal">🥇</div>
+<div>
+<div class="player-name">نفر اول</div>
+<div class="player-small">مدال طلا</div>
+</div>
+<div class="prize">۴۵٪</div>
+</div>
+
+<div class="player">
+<div class="medal">🥈</div>
+<div>
+<div class="player-name">نفر دوم</div>
+<div class="player-small">مدال نقره</div>
+</div>
+<div class="prize">۳۵٪</div>
+</div>
+
+<div class="player">
+<div class="medal">🥉</div>
+<div>
+<div class="player-name">نفر سوم</div>
+<div class="player-small">مدال برنز</div>
+</div>
+<div class="prize">۲۰٪</div>
+</div>
+
+</div>
+
+<div class="box" style="margin-top:10px">
+
+💰 استخر جایزه مسابقه در نسخه سروری محاسبه می‌شود.
+
+<br>
+🥇 نفر اول: ۴۵٪
+<br>
+🥈 نفر دوم: ۳۵٪
+<br>
+🥉 نفر سوم: ۲۰٪
+
+<br><br>
+
+در نسخه نهایی، نام و مبلغ دقیق سه نفر برتر در همین قسمت نمایش داده می‌شود.
+
+</div>
+
+</section>
+
+
+<section class="section special">
+
+<div class="section-title">
+⚡ بسته ویژه مسابقه
+</div>
+
+<div class="package">
+
+<div>
+<div class="package-name">
+۴۰۰ ❤️ جان
+</div>
+
+<div class="notice">
+برای ادامه مسابقه در صورت کمبود جان
+</div>
+</div>
+
+<div>
+<div class="package-price">۴۰ USDT</div>
+
+<button class="buy" onclick="buyLives(400,40)">
+خرید
+</button>
+</div>
+
+</div>
+
+<div class="box" style="margin-top:10px">
+
+🚨 اگر جانت کم شده، بسته ویژه برای ادامه بازی در دسترس است.
+<br>
+خرید کاملاً اختیاری است و برای ادامه بازی اجباری نیست.
+
+</div>
+
+</section>
+
+
+<section class="section">
+
+<div class="section-title">
+❤️ بسته‌های جان
+</div>
+
+<div class="packages">
+
+<div class="package">
+<div class="package-name">۲۰ جان</div>
+<div class="package-price">۲ USDT</div>
+<button class="buy" onclick="buyLives(20,2)">خرید</button>
+</div>
+
+<div class="package">
+<div class="package-name">۴۰ جان</div>
+<div class="package-price">۳ USDT</div>
+<button class="buy" onclick="buyLives(40,3)">خرید</button>
+</div>
+
+<div class="package">
+<div class="package-name">۱۰۰ جان</div>
+<div class="package-price">۱۰ USDT</div>
+<button class="buy" onclick="buyLives(100,10)">خرید</button>
+</div>
+
+</div>
+
+</section>
+
+
+<section class="section">
+
+<div class="section-title">
+🎁 دعوت دوستان
+</div>
+
+<div class="box">
+
+۵ بازیکن فعال را دعوت کن و ۴۰ جان دریافت کن.
+
+<br>
+
+لینک دعوت واقعی در نسخه متصل به Telegram Bot ساخته می‌شود.
+
+</div>
+
+<button class="primary" style="margin-top:10px" onclick="invite()">
+🔗 دعوت دوستان
+</button>
+
+</section>
+
+
+<section class="section">
+
+<div class="section-title">
+👤 شخصیت و آواتار
+</div>
+
+<div class="feature">
+
+<div class="box">
+ساخت شخصیت و آواتار — <b style="color:#ffd54a">۲ USDT</b>
+</div>
+
+<button class="primary" onclick="character()">
+👤 ساخت شخصیت
+</button>
+
+<div class="box">
+هر ارتقا — <b style="color:#ffd54a">۲ USDT</b>
+</div>
+
+<button class="primary" onclick="upgrade()">
+⬆️ ارتقای شخصیت
+</button>
+
+<div class="box">
+ساخت گروه + پیام + درخواست جان + آواتار گروه — <b style="color:#ffd54a">۳ USDT</b>
+</div>
+
+<button class="primary" onclick="createGroup()">
+👥 ساخت گروه
+</button>
+
+</div>
+
+</section>
+
+
+<section class="section">
+
+<div class="section-title">
+🆕 بازیکنان تازه‌وارد
+</div>
+
+<div class="box">
+
+اگر تازه وارد شدی، می‌توانی روزهای قبلی را هم بازی کنی تا از رقابت عقب نمانی.
+
+<br><br>
+
+⚠️ امتیاز نهایی در نسخه واقعی باید روی سرور ذخیره شود.
+
+</div>
+
+</section>
+
+
+<div class="footer">
+WORLD VAULT © 2026
+<br>
+نسخه آزمایشی مسابقه
+</div>
+
+</div>
+
+
+<script>
+
+/* =========================================
+   WORLD VAULT — 7 DAY GAME
+========================================= */
+
+const GAME_KEY = "WORLD_VAULT_7DAY_V2";
+
+const TOTAL_TIME = 168 * 60 * 60 * 1000;
+
+let game = JSON.parse(
+ localStorage.getItem(GAME_KEY) || "null"
+);
+
+if(!game){
+
+ game = {
+   start: Date.now(),
+   score: 0,
+   lives: 100,
+   day: 1,
+   name: "بازیکن مهمان",
+   avatar: "🧑",
+   answers: {},
+   invited: 0,
+   character: false,
+   upgrades: 0
+ };
+
+ save();
+
+}
+
+
+/* =========================================
+   QUESTIONS
+========================================= */
+
+const normalQuestions = [
+
+{
+ q:"پایتخت ایران کدام است؟",
+ a:["تهران","شیراز","تبریز","رشت"],
+ c:0
+},
+
+{
+ q:"کدام سیاره به خورشید نزدیک‌تر است؟",
+ a:["زمین","مریخ","عطارد","زهره"],
+ c:2
+},
+
+{
+ q:"۱۲ × ۸ چند است؟",
+ a:["۸۶","۹۲","۹۶","۱۰۸"],
+ c:2
+},
+
+{
+ q:"مجموع زوایای مثلث چند درجه است؟",
+ a:["۹۰","۱۲۰","۱۸۰","۳۶۰"],
+ c:2
+},
+
+{
+ q:"کدام مورد زبان برنامه‌نویسی است؟",
+ a:["Python","JPEG","MP3","PNG"],
+ c:0
+},
+
+{
+ q:"ریشه دوم ۱۴۴ چند است؟",
+ a:["۱۰","۱۱","۱۲","۱۴"],
+ c:2
+},
+
+{
+ q:"یک هفته چند روز است؟",
+ a:["۵","۶","۷","۸"],
+ c:2
+},
+
+{
+ q:"۲ به توان ۱۰ چند است؟",
+ a:["۵۱۲","۱۰۰۰","۱۰۲۴","۲۰۴۸"],
+ c:2
+},
+
+{
+ q:"مساحت مربع با ضلع ۷ چند است؟",
+ a:["۱۴","۲۸","۴۹","۵۶"],
+ c:2
+},
+
+{
+ q:"کدام عدد اول است؟",
+ a:["۲۱","۲۵","۲۷","۲۹"],
+ c:3
+}
+
+];
+
+
+const hardQuestions = [
+
+{
+ q:"اگر ۱۵٪ یک عدد برابر ۳۰ باشد، عدد چند است؟",
+ a:["۱۰۰","۱۵۰","۲۰۰","۲۵۰"],
+ c:2
+},
+
+{
+ q:"عدد بعدی چیست؟ ۳، ۶، ۱۲، ۲۴، ؟",
+ a:["۳۶","۴۲","۴۸","۵۴"],
+ c:2
+},
+
+{
+ q:"میانگین ۱۰، ۲۰ و ۳۰ چند است؟",
+ a:["۱۵","۲۰","۲۵","۳۰"],
+ c:1
+},
+
+{
+ q:"۲ به توان ۸ چند است؟",
+ a:["۱۲۸","۲۵۶","۵۱۲","۱۰۲۴"],
+ c:1
+},
+
+{
+ q:"محیط مربع ۴۸ است. ضلع آن چند است؟",
+ a:["۸","۱۰","۱۲","۱۴"],
+ c:2
+},
+
+{
+ q:"۲۵٪ عدد ۸۰ چند است؟",
+ a:["۱۵","۲۰","۲۵","۳۰"],
+ c:1
+},
+
+{
+ q:"اگر قیمت کالایی ۲۰۰ باشد و ۱۰٪ تخفیف بخورد، قیمت نهایی؟",
+ a:["۱۷۰","۱۸۰","۱۹۰","۲۰۰"],
+ c:1
+},
+
+{
+ q:"حاصل ۷ × ۹ + ۳ چیست؟",
+ a:["۶۳","۶۶","۷۰","۷۲"],
+ c:1
+},
+
+{
+ q:"یک ساعت چند ثانیه دارد؟",
+ a:["۱۸۰۰","۳۶۰۰","۴۸۰۰","۶۰۰۰"],
+ c:1
+},
+
+{
+ q:"اگر ۵ کارگر کاری را در ۱۰ روز انجام دهند، سؤال مربوط به سرعت کار به چه چیزی وابسته است؟",
+ a:["زمان و نیروی کار","رنگ ساختمان","آب‌وهوا فقط","نام کارگر"],
+ c:0
+}
+
+];
+
+
+const extremeQuestions = [
+
+{
+ q:"دنباله ۱، ۱، ۲، ۳، ۵، ۸، ؟",
+ a:["۱۰","۱۱","۱۲","۱۳"],
+ c:3
+},
+
+{
+ q:"۲۰٪ یک عدد ۳۶ است. عدد چیست؟",
+ a:["۱۶۰","۱۷۰","۱۸۰","۲۰۰"],
+ c:2
+},
+
+{
+ q:"دنباله ۳، ۶، ۱۲، ۲۴، ۴۸، ؟",
+ a:["۷۲","۸۴","۹۶","۱۰۸"],
+ c:2
+},
+
+{
+ q:"میانگین ۱۲، ۱۸ و X برابر ۲۰ است. X چند است؟",
+ a:["۲۴","۲۸","۳۰","۳۲"],
+ c:2
+},
+
+{
+ q:"۲⁵ × ۳² چند است؟",
+ a:["۱۴۴","۲۱۶","۲۸۸","۳۲۴"],
+ c:1
+},
+
+{
+ q:"کالا با ۲۵٪ تخفیف ۱۵۰ شده. قیمت اولیه؟",
+ a:["۱۷۵","۱۹۰","۲۰۰","۲۲۵"],
+ c:2
+},
+
+{
+ q:"اگر A=1 و B=2 و C=3 باشد، CAB چند است؟",
+ a:["۵","۶","۷","۸"],
+ c:1
+},
+
+{
+ q:"محیط مربع ۶۴ است. مساحت آن؟",
+ a:["۶۴","۱۲۸","۲۵۶","۵۱۲"],
+ c:2
+},
+
+{
+ q:"۱۶۸ ساعت دقیقاً چند روز است؟",
+ a:["۵","۶","۷","۸"],
+ c:2
+},
+
+{
+ q:"اگر سرعت یک خودرو دو برابر شود و مسافت ثابت بماند، زمان تقریبی چه تغییری می‌کند؟",
+ a:["دو برابر","نصف","سه برابر","ثابت"],
+ c:1
+}
+
+];
+
+
+/* =========================================
+   SAVE
+========================================= */
+
+function save(){
+
+ localStorage.setItem(
+   GAME_KEY,
+   JSON.stringify(game)
+ );
+
+}
+
+
+/* =========================================
+   PLAYER
+========================================= */
+
+function updateProfile(){
+
+ document.getElementById("playerName")
+ .innerText = game.name;
+
+ document.getElementById("avatar")
+ .innerText = game.avatar;
+
+}
+
+
+/* =========================================
+   DAYS
+========================================= */
+
+function renderDays(){
+
+ const box=document.getElementById("days");
+
+ box.innerHTML="";
+
+ for(let day=1;day<=7;day++){
+
+   const el=document.createElement("button");
+
+   el.className="day";
+
+   if(day===game.day)
+     el.classList.add("active");
+
+   if(day===7)
+     el.classList.add("final");
+
+   if(isDayFinished(day))
+     el.classList.add("done");
+
+   el.innerHTML=
+    `<div class="day-number">
+      ${day===7?"🔥":"روز "+day}
+     </div>
+     <div class="day-info">
+      ${day===7?"فوق‌العاده سخت":"۱۰ مأموریت"}
+     </div>`;
+
+   el.onclick=()=>{
+     game.day=day;
+     save();
+     render();
+   };
+
+   box.appendChild(el);
+
+ }
+
+}
+
+
+/* =========================================
+   DAY FINISH
+========================================= */
+
+function isDayFinished(day){
+
+ for(let i=0;i<10;i++){
+
+   if(!game.answers[day+"-"+i])
+     return false;
+
+ }
+
+ return true;
+
+}
+
+
+/* =========================================
+   QUESTIONS
+========================================= */
+
+function getQuestion(day,index){
+
+ if(day===7)
+   return extremeQuestions[index];
+
+ return index%2===0
+   ?normalQuestions[index]
+   :hardQuestions[index];
+
+}
+
+
+/* =========================================
+   RENDER MISSIONS
+========================================= */
+
+function renderMissions(){
+
+ const container=
+ document.getElementById("missions");
+
+ container.innerHTML="";
+
+ const title=
+ document.getElementById("dayTitle");
+
+ title.innerText=
+ game.day===7
+ ? "🔥 روز ۷ — فوق‌العاده سخت"
+ : "روز "+game.day;
+
+ for(let i=0;i<10;i++){
+
+   const q=getQuestion(game.day,i);
+
+   const id=
+    game.day+"-"+i;
+
+   const mission=
+    document.createElement("div");
+
+   mission.className="mission";
+
+   if(i%2===1 && game.day!==7)
+     mission.classList.add("hard");
+
+   if(game.day===7)
+     mission.classList.add("final");
+
+   const done=
+    game.answers[id];
+
+   mission.innerHTML=`
+
+    <div class="mission-title">
+     ${game.day===7
+       ?"🔥 مأموریت فوق‌العاده سخت"
+       :(i%2===0
+         ?"🎯 مأموریت معمولی"
+         :"⚡ مأموریت سخت")}
+     — ${i+1}/10
     </div>
 
-    <!-- بدنه اصلی بازی -->
-    <div class="game-viewport" id="game-view">
-        <div class="top-bar">
-            <div class="brand-logo">🏺 WORLD TREASURE</div>
-            <div class="player-stats">
-                <div class="stat-pill">❤️ <span id="hearts-count">5</span></div>
-                <div class="stat-pill">🪙 <span id="coins-count">0</span></div>
-            </div>
-        </div>
-
-        <div class="adventure-map">
-            <div class="map-title" id="t-map-title">🗺️ فصل ۱: ویرانه‌های فراموش‌شده</div>
-            <div class="path-container" id="nodes-container"></div>
-        </div>
-
-        <div class="action-banner">
-            <div id="mission-info">
-                <span id="t-active-mission" style="font-size:0.75rem; color:var(--accent-cyan); display:block; margin-bottom:4px;">مأموریت فعال</span>
-                <h3 id="current-title" style="margin-bottom:6px; color:#fff;">مأموریت ۱</h3>
-                <p id="current-desc" style="font-size:0.75rem; color:#8d9dbf;">اولین قدم برای اکتشاف معبد باستانی.</p>
-            </div>
-            <button class="btn-action" id="action-btn" onclick="openChallenge()">🧭 شروع مأموریت</button>
-        </div>
+    <div class="question">
+     ${q.q}
     </div>
 
-    <!-- ناوبری پایین -->
-    <nav class="bottom-bar" id="bottom-nav" style="display:none;">
-        <a class="tab-item active" onclick="closeAllOverlays()">
-            <span class="tab-icon">🗺️</span>
-            <span id="t-nav-map">نقشه</span>
-        </a>
-        <a class="tab-item" onclick="openOverlay('competition')">
-            <span class="tab-icon">🏆</span>
-            <span id="t-nav-comp">مسابقات</span>
-        </a>
-        <a class="tab-item" onclick="openOverlay('shop')">
-            <span class="tab-icon">🛒</span>
-            <span id="t-nav-shop">بازارچه</span>
-        </a>
-    </nav>
+    <div class="answers"></div>
 
-    <!-- مودال بازارچه -->
-    <div id="shop-overlay" class="fullscreen-overlay">
-        <div class="overlay-box">
-            <button class="close-overlay" onclick="closeOverlay('shop')">✕</button>
-            <h2 id="t-shop-title" style="color:var(--gold); text-align:center; margin-bottom:15px;">🛒 بازارچه تتر</h2>
-            
-            <div class="shop-item">
-                <span id="t-pack-20">❤️ ۲۰ جان اضافی</span>
-                <button class="buy-btn" onclick="selectPack('2')">۲ تتر</button>
-            </div>
-            <div class="shop-item">
-                <span id="t-pack-50">❤️ ۵۰ جان اضافی</span>
-                <button class="buy-btn" onclick="selectPack('4')">۴ تتر</button>
-            </div>
-            <div class="shop-item">
-                <span id="t-pack-100">❤️ ۱۰۰ جان اضافی</span>
-                <button class="buy-btn" onclick="selectPack('10')">۱۰ تتر</button>
-            </div>
-            <div class="shop-item">
-                <span id="t-pack-ticket">⚔️ بلیط ورود به مسابقه اصلی</span>
-                <button class="buy-btn" onclick="selectPack('3')">۳ تتر</button>
-            </div>
+   `;
 
-            <div id="payment-gateways" style="display:none; margin-top:20px; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px;">
-                <p id="t-region-prompt" style="font-size:0.8rem; text-align:center; margin-bottom:10px;">انتخاب منطقه پرداخت:</p>
-                <div class="region-selector">
-                    <button class="region-btn active" id="btn-ir" onclick="switchRegion('IR')">🇮🇷 ایران (بیت‌پین)</button>
-                    <button class="region-btn" id="btn-global" onclick="switchRegion('GLOBAL')">🌐 بین‌المللی</button>
-                </div>
-            </div>
+   const answers=
+    mission.querySelector(".answers");
 
-            <div id="crypto-payment" class="crypto-box" style="display:none;">
-                <h4 style="color:var(--gold); margin-bottom:5px;">💳 فاکتور پرداخت (TRC20)</h4>
-                <p style="font-size:0.85rem; margin-bottom:5px;"><span id="t-amount">مبلغ:</span> <strong id="pay-amt" style="color:var(--gold);">0</strong> تتر</p>
-                <div id="payment-details-content"></div>
-                <input type="text" id="txid-input" style="width:100%; padding:10px; margin-top:15px; border-radius:6px; border:1px solid #333; background:#000; color:#fff; text-align:center;" placeholder="کد تراکنش (TxID)">
-                <button class="btn-action" id="t-submit-tx" style="padding:10px; font-size:0.9rem;" onclick="submitTx()">ثبت تراکنش</button>
-            </div>
-        </div>
-    </div>
+   q.a.forEach((answer,index)=>{
 
-    <!-- مودال مسابقات -->
-    <div id="competition-overlay" class="fullscreen-overlay">
-        <div class="overlay-box">
-            <button class="close-overlay" onclick="closeOverlay('competition')">✕</button>
-            <h2 id="t-comp-title" style="color:var(--gold); text-align:center; margin-bottom:15px;">🏆 مسابقه هفتگی تتر</h2>
-            <div id="comp-content" style="text-align:center; font-size:0.85rem; line-height:1.7;"></div>
-        </div>
-    </div>
+     const btn=
+      document.createElement("button");
 
-    <!-- مودال چالش بازی -->
-    <div id="game-modal" class="fullscreen-overlay">
-        <div class="overlay-box" style="text-align:center;">
-            <button class="close-overlay" onclick="closeGame()">✕</button>
-            <h3 id="challenge-title" style="color:var(--gold); margin-bottom:15px;">چالش مأموریت</h3>
-            <p id="challenge-desc" style="color:#b7c4df; margin-bottom:20px; font-size:0.9rem;"></p>
-            <div id="challenge-options" style="display:grid; gap:10px;"></div>
-            <p id="challenge-result" style="margin-top:15px; font-weight:bold;"></p>
-        </div>
-    </div>
+     btn.className="answer";
 
-    <script>
-        const tg = window.Telegram ? window.Telegram.WebApp : null;
-        if(tg) { tg.ready(); tg.expand(); }
+     btn.innerText=
+      `${String.fromCharCode(1575+index)}) ${answer}`;
 
-        const walletGlobal = "TPNARMXa2rTfuigwvXAxKDsfPXQgpshxKY"; // آدرس ترون لینک (TRC20) شما برای کاربران خارج از ایران
-        const walletIR = "TPNARMXa2rTfuigwvXAxKDsfPXQgpshxKY";     // آدرس ولت بیت پین شما برای کاربران داخل ایران (TRC20)
+     if(done){
 
-        let playerStage = 1;
-        let hearts = 5;
-        let selectedGender = 'male';
-        let currentLang = 'fa';
-        let currentRegion = 'IR';
+       btn.disabled=true;
 
-        // دیکشنری چندزبانه کامل
-        const dict = {
-            fa: {
-                welcome: "به گنجینه جهانی خوش آمدید",
-                langLabel: "زبان بازی / Language",
-                userLabel: "نام کاربری",
-                genderLabel: "جنسیت",
-                male: "👨 مرد",
-                female: "👩 زن",
-                startBtn: "شروع ماجراجویی",
-                mapTitle: "🗺️ فصل ۱: ویرانه‌های فراموش‌شده",
-                activeMission: "مأموریت فعال",
-                startMissionBtn: "🧭 شروع مأموریت",
-                navMap: "نقشه",
-                navComp: "مسابقات",
-                navShop: "بازارچه",
-                shopTitle: "🛒 بازارچه تتر",
-                pack20: "❤️ ۲۰ جان اضافی",
-                pack50: "❤️ ۵۰ جان اضافی",
-                pack100: "❤️ ۱۰۰ جان اضافی",
-                packTicket: "⚔️ بلیط ورود به مسابقه اصلی",
-                regionPrompt: "انتخاب منطقه پرداخت:",
-                irBtn: "🇮🇷 ایران (بیت‌پین)",
-                globalBtn: "🌐 بین‌المللی",
-                amount: "مبلغ:",
-                submitTx: "ثبت تراکنش",
-                compTitle: "🏆 مسابقه هفتگی تتر",
-                compLocked: "🔒 مسابقه اصلی قفل است! ابتدا ۱۰ مأموریت مقدماتی را تمام کنید.",
-                compOpen: "⚔️ ورودی مسابقات هفتگی فعال است! جایزه نفر اول: ۵۰ تتر.",
-                correct: "✅ پاسخ درست بود! مرحله بعد باز شد.",
-                wrong: "❌ پاسخ اشتباه بود! یک جان کم شد."
-            },
-            en: {
-                welcome: "Welcome to World Treasure",
-                langLabel: "Language",
-                userLabel: "Username",
-                genderLabel: "Gender",
-                male: "👨 Male",
-                female: "👩 Female",
-                startBtn: "Start Adventure",
-                mapTitle: "🗺️ Chapter 1: Forgotten Ruins",
-                activeMission: "Active Mission",
-                startMissionBtn: "🧭 Start Mission",
-                navMap: "Map",
-                navComp: "Tournaments",
-                navShop: "Shop",
-                shopTitle: "🛒 USDT Shop",
-                pack20: "❤️ +20 Hearts",
-                pack50: "❤️ +50 Hearts",
-                pack100: "❤️ +100 Hearts",
-                packTicket: "⚔️ Main Tournament Ticket",
-                regionPrompt: "Select Region:",
-                irBtn: "🇮🇷 Iran (Bitpin)",
-                globalBtn: "🌐 Global",
-                amount: "Amount:",
-                submitTx: "Submit Transaction",
-                compTitle: "🏆 Weekly USDT Tournament",
-                compLocked: "🔒 Main tournament is locked! Complete 10 introductory missions first.",
-                compOpen: "⚔️ Weekly tournament is open! 1st Prize: 50 USDT.",
-                correct: "✅ Correct answer! Next stage unlocked.",
-                wrong: "❌ Incorrect! You lost a heart."
-            },
-            ar: {
-                welcome: "مرحباً بك في الكنز العالمي",
-                langLabel: "اللغة",
-                userLabel: "اسم المستخدم",
-                genderLabel: "الجنس",
-                male: "👨 ذكر",
-                female: "👩 أنثى",
-                startBtn: "ابدأ المغامرة",
-                mapTitle: "🗺️ الفصل 1: الآثار المنسية",
-                activeMission: "المهمة النشطة",
-                startMissionBtn: "🧭 ابدأ المهمة",
-                navMap: "الخريطة",
-                navComp: "المسابقة",
-                navShop: "المتجر",
-                shopTitle: "🛒 متجر USDT",
-                pack20: "❤️ +20 قلوب",
-                pack50: "❤️ +50 قلوب",
-                pack100: "❤️ +100 قلوب",
-                packTicket: "⚔️ تذكرة البطولات",
-                regionPrompt: "اختر المنطقة:",
-                irBtn: "🇮🇷 إيران",
-                globalBtn: "🌐 دولي",
-                amount: "المبلغ:",
-                submitTx: "إرسال المعاملة",
-                compTitle: "🏆 بطولة USDT الأسبوعية",
-                compLocked: "🔒 البطولة مقفلة! أكمل أول 10 مهام أولاً.",
-                compOpen: "⚔️ البطولة مفتوحة! الجائزة الأولى: 50 USDT.",
-                correct: "✅ إجابة صحيحة!",
-                wrong: "❌ إجابة خاطئة!"
-            },
-            tr: {
-                welcome: "Dünya Hazinesi'ne Hoş Geldiniz",
-                langLabel: "Dil",
-                userLabel: "Kullanıcı Adı",
-                genderLabel: "Cinsiyet",
-                male: "👨 Erkek",
-                female: "👩 Kadın",
-                startBtn: "Macera Başlasın",
-                mapTitle: "🗺️ Bölüm 1: Unutulmuş Harabeler",
-                activeMission: "Aktif Görev",
-                startMissionBtn: "🧭 Görevi Başlat",
-                navMap: "Harita",
-                navComp: "Turnuva",
-                navShop: "Mağaza",
-                shopTitle: "🛒 USDT Mağazası",
-                pack20: "❤️ +20 Kalp",
-                pack50: "❤️ +50 Kalp",
-                pack100: "❤️ +100 Kalp",
-                packTicket: "⚔️ Turnuva Bileti",
-                regionPrompt: "Bölge Seçin:",
-                irBtn: "🇮🇷 İran",
-                globalBtn: "🌐 Küresel",
-                amount: "Tutar:",
-                submitTx: "İşlemi Gönder",
-                compTitle: "🏆 Haftalık USDT Turnuvası",
-                compLocked: "🔒 Turnuva kilitli! Önce 10 görevi tamamlayın.",
-                compOpen: "⚔️ Turnuva açık! 1. Ödül: 50 USDT.",
-                correct: "✅ Doğru cevap!",
-                wrong: "❌ Yanlış cevap!"
-            }
-        };
+       if(index===q.c)
+         btn.classList.add("correct");
 
-        const challenges = [
-            { title: "رمز ورودی معبد", desc: "کدام گزینه برای باز کردن دروازه مناسب است؟", options: ["کلید طلایی", "سنگ معمولی", "چوب خشک"], answer: 0 },
-            { title: "عبور از تله‌ها", desc: "برای عبور امن کدام مسیر را انتخاب می‌کنی؟", options: ["مسیر علامت‌دار", "مسیر تاریک", "مسیر پردود"], answer: 0 },
-            { title: "معمای آینه‌ها", desc: "نور باید به کجا تابانده شود؟", options: ["بلور آبی", "دیوار سنگی", "صندوق چوبی"], answer: 0 },
-            { title: "چشمه شفابخش", desc: "برای بازیابی انرژی چه می‌کنی؟", options: ["نوشیدن آب چشمه", "شکستن چشمه", "ترک معبد"], answer: 0 },
-            { title: "معبر فروریخته", desc: "برای رد شدن از شکاف چه نیاز است؟", options: ["طناب", "مشعل خاموش", "سکه"], answer: 0 },
-            { title: "دروازه مومیایی", desc: "دروازه با چه چیزی باز می‌شود؟", options: ["کلید طلایی", "شن", "پارچه"], answer: 0 },
-            { title: "مقبره طلا", desc: "کدام صندوقچه را انتخاب می‌کنی؟", options: ["صندوق خورشید", "صندوق شکسته", "صندوق ساده"], answer: 0 },
-            { title: "هزارتوی بادها", desc: "کدام مسیر خروج است؟", options: ["مسیر پرچم‌دار", "مسیر بدون نور", "مسیر بسته"], answer: 0 },
-            { title: "پل سایه‌ها", desc: "به کدام قسمت پل نگاه می‌کنی؟", options: ["تخته‌های سالم", "تخته‌های شکسته", "لبه پرتگاه"], answer: 0 },
-            { title: "قلب گنجینه", desc: "وسیله نهایی برای گبرگشایی؟", options: ["نشان طلایی", "سنگ سیاه", "مشعل"], answer: 0 }
-        ];
+     }
 
-        function changeLanguage(lang) {
-            currentLang = lang;
-            const t = dict[lang];
-            
-            document.documentElement.lang = lang;
-            document.documentElement.dir = (lang === 'fa' || lang === 'ar') ? 'rtl' : 'ltr';
+     btn.onclick=()=>{
 
-            document.getElementById('t-welcome').textContent = t.welcome;
-            document.getElementById('t-lang-label').textContent = t.langLabel;
-            document.getElementById('t-user-label').textContent = t.userLabel;
-            document.getElementById('t-gender-label').textContent = t.genderLabel;
-            document.getElementById('gender-male').textContent = t.male;
-            document.getElementById('gender-female').textContent = t.female;
-            document.getElementById('t-start-btn').textContent = t.startBtn;
-            document.getElementById('t-map-title').textContent = t.mapTitle;
-            document.getElementById('t-active-mission').textContent = t.activeMission;
-            document.getElementById('action-btn').textContent = t.startMissionBtn;
-            document.getElementById('t-nav-map').textContent = t.navMap;
-            document.getElementById('t-nav-comp').textContent = t.navComp;
-            document.getElementById('t-nav-shop').textContent = t.navShop;
-            document.getElementById('t-shop-title').textContent = t.shopTitle;
-            document.getElementById('t-pack-20').textContent = t.pack20;
-            document.getElementById('t-pack-50').textContent = t.pack50;
-            document.getElementById('t-pack-100').textContent = t.pack100;
-            document.getElementById('t-pack-ticket').textContent = t.packTicket;
-            document.getElementById('t-region-prompt').textContent = t.regionPrompt;
-            document.getElementById('btn-ir').textContent = t.irBtn;
-            document.getElementById('btn-global').textContent = t.globalBtn;
-            document.getElementById('t-amount').textContent = t.amount;
-            document.getElementById('t-submit-tx').textContent = t.submitTx;
-            document.getElementById('t-comp-title').textContent = t.compTitle;
-        }
+       answerQuestion(
+        game.day,
+        i,
+        index,
+        q,
+        answers
+       );
 
-        function setGender(gender) {
-            selectedGender = gender;
-            document.getElementById('gender-male').classList.toggle('active', gender === 'male');
-            document.getElementById('gender-female').classList.toggle('active', gender === 'female');
-        }
+     };
 
-        function startTheGame() {
-            const usernameInput = document.getElementById("username-input");
-            const loginScreen = document.getElementById("login-screen");
-            const gameView = document.getElementById("game-view");
-            const bottomNav = document.getElementById("bottom-nav");
+     answers.appendChild(btn);
 
-            if (!usernameInput || !loginScreen || !gameView || !bottomNav) {
-                alert("خطا: یکی از بخش‌های صفحه پیدا نشد.");
-                return;
-            }
+   });
 
-            const username = usernameInput.value.trim();
+   container.appendChild(mission);
 
-            if (username === "") {
-                alert("لطفاً نام کاربری را وارد کنید.");
-                usernameInput.focus();
-                return;
-            }
+ }
 
-            localStorage.setItem("worldTreasureUsername", username);
-            localStorage.setItem("worldTreasureGender", selectedGender);
-            localStorage.setItem("worldTreasureLanguage", currentLang);
+}
 
-            loginScreen.style.display = "none";
-            gameView.style.display = "flex";
-            bottomNav.style.display = "grid";
 
-            renderMap();
-        }
+/* =========================================
+   ANSWER
+========================================= */
 
-        function renderMap() {
-            const container = document.getElementById('nodes-container');
-            container.innerHTML = "";
-            for(let i = 1; i <= 10; i++) {
-                let nodeClass = "step-node locked";
-                let content = i === 10 ? "🏆" : i;
-                if (i < playerStage) nodeClass = "step-node completed";
-                else if (i === playerStage) nodeClass = "step-node active";
-                container.innerHTML += `<div class="${nodeClass}">${content}</div>`;
-            }
-        }
+function answerQuestion(
+ day,
+ index,
+ selected,
+ question,
+ answers
+){
 
-        function openChallenge() {
-            if (playerStage > 10) {
-                openOverlay('competition');
-                return;
-            }
-            if (hearts <= 0) {
-                alert(currentLang === 'fa' ? 'جان کافی ندارید!' : 'Not enough hearts!');
-                return;
-            }
+ const id=day+"-"+index;
 
-            const challenge = challenges[playerStage - 1];
-            document.getElementById('challenge-title').textContent = challenge.title;
-            document.getElementById('challenge-desc').textContent = challenge.desc;
-            document.getElementById('challenge-result').textContent = "";
-            
-            const optionsBox = document.getElementById('challenge-options');
-            optionsBox.innerHTML = "";
+ if(game.answers[id])
+   return;
 
-            challenge.options.forEach((opt, idx) => {
-                const btn = document.createElement('button');
-                btn.className = "btn-action";
-                btn.style.margin = "0";
-                btn.style.padding = "10px";
-                btn.style.f
+ const buttons=
+ answers.querySelectorAll("button");
+
+ buttons.forEach(b=>{
+   b.disabled=true;
+ });
+
+ if(selected===question.c){
+
+   buttons[selected]
+    .classList.add("correct");
+
+   let points=10;
+
+   if(day===7)
+     points=30;
+
+   else if(index%2===1)
+     points=20;
+
+   game.score+=points;
+
+ }else{
+
+   buttons[selected]
+    .classList.add("wrong");
+
+   buttons[question.c]
+    .classList.add("correct");
+
+   game.lives=
+    Math.max(0,game.lives-2);
+
+ }
+
+ game.answers[id]=true;
+
+ save();
+
+ updateStats();
+
+ setTimeout(
+  render,
+  450
+ );
+
+}
+
+
+/* =========================================
+   STATS
+========================================= */
+
+function updateStats(){
+
+ document.getElementById("score")
+ .innerText=
+ game.score.toLocaleString("fa-IR");
+
+ document.getElementById("lives")
+ .innerText=
+ game.lives.toLocaleString("fa-IR");
+
+ let rank="—";
+
+ if(game.score>=600)
+   rank="🥇";
+
+ else if(game.score>=400)
+   rank="🥈";
+
+ else if(game.score>=200)
+   rank="🥉";
+
+ document.getElementById("rank")
+ .innerText=rank;
+
+}
+
+
+/* =========================================
+   TIMER
+========================================= */
+
+function updateTimer(){
+
+ const remaining=
+ Math.max(
+  0,
+  TOTAL_TIME -
+  (Date.now()-game.start)
+ );
+
+ const h=
+ Math.floor(
+  remaining/3600000
+ );
+
+ const m=
+ Math.floor(
+  (remaining%3600000)/60000
+ );
+
+ const s=
+ Math.floor(
+  (remaining%60000)/1000
+ );
+
+ document.getElementById("timer")
+ .innerText=
+ String(h).padStart(3,"0")
+ +":"
+ +String(m).padStart(2,"0")
+ +":"
+ +String(s).padStart(2,"0");
+
+ const app=
+ document.body;
+
+ if(
+  remaining<=
+  5*60*60*1000
+ ){
+
+   app.classList.add("danger");
+
+   document.getElementById(
+    "timerMessage"
+   ).innerText=
+    "🚨 ۵ ساعت آخر مسابقه!";
+
+ }else{
+
+   app.classList.remove("danger");
+
+   document.getElementById(
+    "timerMessage"
+   ).innerText=
+    "مسابقه در جریان است";
+
+ }
+
+ if(remaining<=0){
+
+   document.getElementById(
+    "timerMessage"
+   ).innerText=
+    "🏁 مسابقه به پایان رسید";
+
+ }
+
+}
+
+
+/* =========================================
+   BUY
+========================================= */
+
+function buyLives(lives,price){
+
+ const confirmBuy=
+ confirm(
+  `بسته ${lives} جان\n\n`+
+  `قیمت: ${price} USDT\n\n`+
+  `در نسخه آزمایشی پرداخت واقعی انجام نمی‌شود.`
+ );
+
+ if(!confirmBuy)
+   return;
+
+ alert(
+  "این بخش فعلاً نمایشی است.\n\n"+
+  "در نسخه نهایی، پرداخت USDT توسط سرور تأیید می‌شود و سپس جان اضافه خواهد شد."
+ );
+
+}
+
+
+/* =========================================
+   INVITE
+========================================= */
+
+function invite(){
+
+ if(
+  window.Telegram &&
+  Telegram.WebApp
+ ){
+
+   try{
+
+    Telegram.WebApp.switchInlineQuery(
+     "من را در WORLD VAULT همراهی کن!",
+     ["users"]
+    );
+
+   }catch(e){
+
+    alert(
+     "لینک دعوت در نسخه Telegram Bot فعال خواهد شد."
+    );
+
+   }
+
+ }else{
+
+   alert(
+    "لینک دعوت اختصاصی در نسخه متصل به Telegram Bot ساخته می‌شود."
+   );
+
+ }
+
+}
+
+
+/* =========================================
+   CHARACTER
+========================================= */
+
+function character(){
+
+ if(game.character){
+
+   alert(
+    "شخصیت شما قبلاً ساخته شده است."
+   );
+
+   return;
+
+ }
+
+ const ok=
+ confirm(
+  "ساخت شخصیت و آواتار\n\n"+
+  "قیمت: ۲ USDT\n\n"+
+  "در نسخه آزمایشی پرداخت انجام نمی‌شود."
+ );
+
+ if(!ok)
+   return;
+
+ game.character=true;
+
+ save();
+
+ alert(
+  "ساخت شخصیت در نسخه آزمایشی ثبت شد.\n"+
+  "پرداخت واقعی بعداً به سرور متصل می‌شود."
+ );
+
+}
+
+
+/* =========================================
+   UPGRADE
+========================================= */
+
+function upgrade(){
+
+ if(!game.character){
+
+   alert(
+    "ابتدا شخصیت خود را بساز."
+   );
+
+   return;
+
+ }
+
+ game.upgrades++;
+
+ save();
+
+ alert(
+  "ارتقای شخصیت\n\n"+
+  "هزینه هر ارتقا: ۲ USDT\n\n"+
+  "نسخه آزمایشی: ارتقا ثبت شد."
+ );
+
+}
+
+
+/* =========================================
+   GROUP
+========================================= */
+
+function createGroup(){
+
+ const ok=
+ confirm(
+  "ساخت گروه\n\n"+
+  "شامل:\n"+
+  "👥 گروه\n"+
+  "💬 پیام\n"+
+  "❤️ درخواست جان\n"+
+  "🖼️ آواتار گروه\n\n"+
+  "قیمت: ۳ USDT\n\n"+
+  "در نسخه آزمایشی پرداخت واقعی انجام نمی‌شود."
+ );
+
+ if(!ok)
+   return;
+
+ alert(
+  "گروه در نسخه آزمایشی آماده است.\n"+
+  "سیستم واقعی گروه در نسخه Telegram متصل خواهد شد."
+ );
+
+}
+
+
+/* =========================================
+   TELEGRAM
+========================================= */
+
+function initTelegram(){
+
+ if(
+  window.Telegram &&
+  Telegram.WebApp
+ ){
+
+   try{
+
+     Telegram.WebApp.ready();
+
+     Telegram.WebApp.expand();
+
+     const user=
+      Telegram.WebApp.initDataUnsafe?.user;
+
+     if(user){
+
+       game.name=
+        user.first_name ||
+        user.username ||
+        game.name;
+
+       save();
+
+       updateProfile();
+
+     }
+
+   }catch(e){}
+
+ }
+
+}
+
+
+/* =========================================
+   RENDER
+========================================= */
+
+function render(){
+
+ renderDays();
+
+ renderMissions();
+
+ updateStats();
+
+ updateProfile();
+
+}
+
+
+/* =========================================
+   START
+========================================= */
+
+initTelegram();
+
+render();
+
+updateTimer();
+
+setInterval(
+ updateTimer,
+ 1000
+);
+
+</script>
+
+</body>
+</html>
