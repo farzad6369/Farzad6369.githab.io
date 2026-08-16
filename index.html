@@ -1,1554 +1,1142 @@
 <!DOCTYPE html>
-<html lang="fa" dir="rtl">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>WORLD VAULT | مسابقه جهانی</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<title>WORLD VAULT</title>
+
+<meta name="theme-color" content="#070b14">
+<meta name="description" content="WORLD VAULT — Explore. Survive. Discover. Unlock.">
 
 <style>
-:root{
- --bg:#050914;
- --card:#0d1b2d;
- --card2:#12263d;
- --gold:#ffd54a;
- --cyan:#19d9ff;
- --green:#35df8a;
- --red:#ff4059;
- --text:#fff;
- --muted:#91a8bd;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-*{
- box-sizing:border-box;
- margin:0;
- padding:0;
- font-family:Tahoma,"Segoe UI",sans-serif;
- user-select:none;
+body {
+    font-family: Arial, sans-serif;
+    background:
+        radial-gradient(circle at top, #18243b 0%, #070b14 45%, #020307 100%);
+    color: #fff;
+    min-height: 100vh;
+    overflow-x: hidden;
 }
 
-body{
- min-height:100vh;
- background:
- radial-gradient(circle at 50% 0%,#18365b 0,#07101e 42%,#03060d 100%);
- color:var(--text);
+button {
+    font: inherit;
 }
 
-button{
- font-family:inherit;
- cursor:pointer;
+.app {
+    width: 100%;
+    max-width: 520px;
+    margin: auto;
+    min-height: 100vh;
+    padding-bottom: 35px;
 }
 
-#app{
- width:100%;
- max-width:760px;
- margin:auto;
- padding:12px;
+/* HEADER */
+
+.header {
+    padding: 22px 16px 12px;
+    text-align: center;
 }
 
-.header{
- background:linear-gradient(135deg,#142e4d,#081421);
- border:1px solid #315576;
- border-radius:22px;
- padding:17px;
- box-shadow:0 15px 40px #0009;
+.logo {
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: 2px;
 }
 
-.logo{
- font-size:27px;
- font-weight:900;
- color:var(--gold);
- text-shadow:0 0 18px #ffd54a55;
+.subtitle {
+    color: #aeb8cc;
+    margin-top: 5px;
+    font-size: 13px;
 }
 
-.subtitle{
- color:var(--muted);
- font-size:12px;
- margin-top:5px;
+/* HUD */
+
+.hud {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 7px;
+    padding: 10px;
 }
 
-.profile{
- display:flex;
- align-items:center;
- gap:10px;
- margin-top:14px;
- background:#07111d;
- padding:10px;
- border-radius:14px;
+.stat {
+    background: rgba(255,255,255,.07);
+    border: 1px solid rgba(255,255,255,.09);
+    border-radius: 13px;
+    padding: 10px 4px;
+    text-align: center;
 }
 
-.avatar{
- width:45px;
- height:45px;
- border-radius:50%;
- background:linear-gradient(135deg,#ffd54a,#ff8a00);
- display:flex;
- align-items:center;
- justify-content:center;
- font-size:24px;
+.stat-value {
+    display: block;
+    font-size: 18px;
+    font-weight: bold;
 }
 
-.profile-name{
- font-weight:bold;
+.stat-name {
+    display: block;
+    font-size: 9px;
+    color: #9ba8bf;
+    margin-top: 3px;
 }
 
-.profile-small{
- font-size:11px;
- color:var(--muted);
- margin-top:3px;
+/* WORLD */
+
+.world {
+    position: relative;
+    min-height: 270px;
+    margin: 10px;
+    border-radius: 22px;
+    overflow: hidden;
+    background:
+        linear-gradient(
+            rgba(0,0,0,.25),
+            rgba(0,0,0,.65)
+        ),
+        radial-gradient(circle at 70% 30%, #344e63, #101923 45%, #05070b);
+    border: 1px solid rgba(255,255,255,.1);
+    box-shadow: 0 15px 50px rgba(0,0,0,.45);
 }
 
-.timer{
- margin-top:12px;
- background:#03070d;
- border:1px solid #294761;
- border-radius:15px;
- padding:12px;
- text-align:center;
+.moon {
+    position: absolute;
+    width: 65px;
+    height: 65px;
+    border-radius: 50%;
+    background: #e9edf4;
+    right: 28px;
+    top: 25px;
+    box-shadow: 0 0 35px rgba(220,230,255,.5);
 }
 
-.timer-label{
- color:var(--muted);
- font-size:11px;
+.fog {
+    position: absolute;
+    width: 150%;
+    height: 100px;
+    left: -25%;
+    bottom: 20px;
+    background: rgba(210,220,230,.08);
+    filter: blur(20px);
+    transform: rotate(-4deg);
 }
 
-#timer{
- color:var(--cyan);
- font-size:32px;
- font-weight:900;
- letter-spacing:2px;
- margin:4px;
+.location {
+    position: absolute;
+    left: 18px;
+    bottom: 18px;
 }
 
-#timerMessage{
- color:var(--muted);
- font-size:11px;
+.location-title {
+    font-size: 24px;
+    font-weight: 900;
 }
 
-.danger{
- background:
- radial-gradient(circle at 50% 0%,#7d0c1b,#25070c 45%,#05070b 100%) !important;
+.location-text {
+    color: #b9c2d3;
+    font-size: 12px;
+    margin-top: 4px;
 }
 
-.danger #timer{
- color:#ff334f;
- text-shadow:0 0 18px #ff334f;
- animation:pulse .8s infinite alternate;
+/* WEATHER */
+
+.weather {
+    margin: 10px;
+    padding: 12px;
+    border-radius: 14px;
+    background: rgba(255,255,255,.05);
+    text-align: center;
+    color: #c9d2e2;
+    font-size: 13px;
 }
 
-@keyframes pulse{
- from{opacity:.65}
- to{opacity:1}
+/* MISSION */
+
+.card {
+    margin: 10px;
+    padding: 18px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.06);
+    border: 1px solid rgba(255,255,255,.08);
 }
 
-.stats{
- display:grid;
- grid-template-columns:repeat(3,1fr);
- gap:7px;
- margin-top:10px;
+.card-title {
+    font-size: 20px;
+    font-weight: 900;
+    margin-bottom: 8px;
 }
 
-.stat{
- background:#0b1929;
- border-radius:13px;
- padding:9px;
- text-align:center;
+.card-text {
+    color: #b5bfd1;
+    line-height: 1.6;
+    font-size: 14px;
 }
 
-.stat strong{
- display:block;
- color:var(--gold);
- font-size:20px;
+/* BUTTONS */
+
+.actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-top: 15px;
 }
 
-.stat span{
- color:var(--muted);
- font-size:10px;
+.btn {
+    border: 0;
+    border-radius: 14px;
+    padding: 14px 10px;
+    cursor: pointer;
+    font-weight: 800;
+    color: white;
+    background: linear-gradient(135deg,#30496f,#17233b);
+    border: 1px solid rgba(255,255,255,.1);
+    transition: transform .15s;
 }
 
-.section{
- background:rgba(10,25,42,.95);
- border:1px solid #213c56;
- border-radius:18px;
- padding:13px;
- margin-top:12px;
- box-shadow:0 8px 25px #0005;
+.btn:active {
+    transform: scale(.96);
 }
 
-.section-title{
- font-size:18px;
- font-weight:bold;
- margin-bottom:10px;
+.btn.primary {
+    background: linear-gradient(135deg,#7a4cff,#3b1d91);
 }
 
-.days{
- display:flex;
- gap:6px;
- overflow-x:auto;
- padding:10px 0 2px;
+.btn.danger {
+    background: linear-gradient(135deg,#8e3040,#47121b);
 }
 
-.day{
- flex:0 0 72px;
- background:#0b1929;
- border:1px solid #28445c;
- border-radius:12px;
- padding:9px 5px;
- text-align:center;
- color:white;
+.btn.gold {
+    background: linear-gradient(135deg,#9b6b18,#4f3508);
 }
 
-.day.active{
- border-color:var(--cyan);
- background:#123b55;
- box-shadow:0 0 12px #19d9ff22;
+/* MESSAGE */
+
+.message {
+    margin-top: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    background: rgba(0,0,0,.25);
+    color: #bfc9da;
+    text-align: center;
+    font-size: 12px;
 }
 
-.day.final{
- border-color:var(--red);
+/* REFERRAL */
+
+.referral {
+    margin: 10px;
+    padding: 18px;
+    border-radius: 20px;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(74,48,130,.35),
+            rgba(20,25,45,.6)
+        );
+    border: 1px solid rgba(255,255,255,.1);
 }
 
-.day.done{
- border-color:var(--green);
+.referral-count {
+    font-size: 27px;
+    font-weight: 900;
+    margin: 8px 0;
 }
 
-.day-number{
- font-weight:bold;
- font-size:14px;
+.referral small {
+    color: #aeb8cc;
 }
 
-.day-info{
- font-size:9px;
- color:var(--muted);
- margin-top:4px;
+/* INFO */
+
+.info {
+    margin: 10px;
+    padding: 18px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.04);
 }
 
-.mission{
- background:#11283d;
- border-right:4px solid var(--cyan);
- border-radius:12px;
- padding:12px;
- margin:9px 0;
+.info h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
 }
 
-.mission.hard{
- border-right-color:var(--gold);
+.info p {
+    color: #aeb8cc;
+    font-size: 13px;
+    line-height: 1.8;
+    margin-bottom: 10px;
 }
 
-.mission.final{
- border-right-color:var(--red);
- box-shadow:0 0 15px #ff405922;
+/* PAYMENT */
+
+.payment {
+    margin: 10px;
+    padding: 18px;
+    border-radius: 20px;
+    background: rgba(255,255,255,.035);
+    border: 1px solid rgba(255,255,255,.07);
 }
 
-.mission-title{
- font-size:11px;
- color:var(--gold);
- font-weight:bold;
+.payment h2 {
+    margin-bottom: 10px;
 }
 
-.question{
- font-size:14px;
- font-weight:bold;
- line-height:1.8;
- margin-top:7px;
+.payment-box {
+    padding: 15px;
+    border-radius: 14px;
+    background: rgba(0,0,0,.25);
+    text-align: center;
 }
 
-.answers{
- display:grid;
- gap:7px;
- margin-top:9px;
+.coming {
+    display: inline-block;
+    margin-top: 10px;
+    padding: 7px 12px;
+    border-radius: 20px;
+    background: rgba(255,190,40,.12);
+    color: #ffd76a;
+    font-size: 11px;
+    font-weight: bold;
 }
 
-.answer{
- width:100%;
- padding:11px;
- border:1px solid #31516a;
- border-radius:10px;
- background:#173149;
- color:#fff;
- text-align:right;
+/* COMPETITION */
+
+.competition {
+    margin: 10px;
+    padding: 18px;
+    border-radius: 20px;
+    text-align: center;
+    background:
+        linear-gradient(
+            135deg,
+            rgba(120,40,50,.35),
+            rgba(30,15,25,.5)
+        );
 }
 
-.answer:hover{
- background:#20425e;
+/* FOOTER */
+
+.footer {
+    text-align: center;
+    padding: 20px 10px;
+    color: #68758d;
+    font-size: 11px;
 }
 
-.answer.correct{
- background:#08734b;
- border-color:var(--green);
-}
-
-.answer.wrong{
- background:#762033;
- border-color:var(--red);
-}
-
-.answer:disabled{
- opacity:.95;
-}
-
-.box{
- background:#0c1b2b;
- border-radius:12px;
- padding:11px;
- color:#b4c8d8;
- font-size:12px;
- line-height:2;
-}
-
-.packages{
- display:grid;
- gap:8px;
-}
-
-.package{
- display:flex;
- align-items:center;
- justify-content:space-between;
- gap:8px;
- background:#10273c;
- border:1px solid #284a63;
- border-radius:12px;
- padding:11px;
-}
-
-.package-name{
- font-weight:bold;
-}
-
-.package-price{
- color:var(--gold);
- font-weight:bold;
-}
-
-.buy{
- border:0;
- border-radius:10px;
- padding:9px 12px;
- background:linear-gradient(90deg,#e7a916,#ffd54a);
- color:#211700;
- font-weight:900;
-}
-
-.special{
- border-color:var(--gold);
- background:linear-gradient(135deg,#33250d,#0d1d2b);
-}
-
-.special .package-name{
- color:var(--gold);
-}
-
-.leader{
- display:grid;
- gap:8px;
-}
-
-.player{
- display:grid;
- grid-template-columns:42px 1fr auto;
- align-items:center;
- gap:8px;
- background:#10273b;
- border-radius:12px;
- padding:10px;
-}
-
-.medal{
- font-size:25px;
-}
-
-.player-name{
- font-weight:bold;
-}
-
-.player-small{
- color:var(--muted);
- font-size:10px;
- margin-top:3px;
-}
-
-.prize{
- color:var(--gold);
- font-weight:900;
- text-align:left;
-}
-
-.feature{
- display:grid;
- gap:8px;
-}
-
-.feature button{
- width:100%;
-}
-
-.primary{
- width:100%;
- border:0;
- border-radius:12px;
- padding:13px;
- background:linear-gradient(90deg,#0abfe0,#28e0ff);
- color:#00151c;
- font-weight:900;
-}
-
-.notice{
- color:#9eb4c5;
- font-size:11px;
- line-height:1.9;
-}
-
-.footer{
- text-align:center;
- color:#60778c;
- font-size:10px;
- padding:20px 0 30px;
+.hidden {
+    display: none;
 }
 </style>
 </head>
 
 <body>
 
-<div id="app">
+<div class="app">
 
-<header class="header">
+    <header class="header">
+        <div class="logo">🌍 WORLD VAULT</div>
+        <div class="subtitle">
+            Explore. Survive. Discover. Unlock.
+        </div>
+    </header>
 
-<div class="logo">🌍 WORLD VAULT</div>
+    <!-- HUD -->
 
-<div class="subtitle">
-مسابقه جهانی ۷ روزه — ۷۰ مأموریت
-</div>
+    <section class="hud">
 
-<div class="profile">
+        <div class="stat">
+            <span class="stat-value">❤️ <span id="lives">10</span></span>
+            <span class="stat-name">ENERGY</span>
+        </div>
 
-<div class="avatar" id="avatar">🧑</div>
+        <div class="stat">
+            <span class="stat-value">⭐ <span id="score">0</span></span>
+            <span class="stat-name">SCORE</span>
+        </div>
 
-<div>
-<div class="profile-name" id="playerName">بازیکن مهمان</div>
-<div class="profile-small">بازیکن مسابقه جهانی</div>
-</div>
+        <div class="stat">
+            <span class="stat-value">🗺️ <span id="maps">0</span></span>
+            <span class="stat-name">MAP</span>
+        </div>
 
-</div>
+        <div class="stat">
+            <span class="stat-value">🔑 <span id="keys">0</span></span>
+            <span class="stat-name">KEYS</span>
+        </div>
 
-<div class="timer">
+    </section>
 
-<div class="timer-label">
-⏱️ زمان باقی‌مانده مسابقه
-</div>
+    <!-- WORLD -->
 
-<div id="timer">168:00:00</div>
+    <section class="world">
 
-<div id="timerMessage">
-مسابقه در جریان است
-</div>
+        <div class="moon"></div>
+        <div class="fog"></div>
 
-</div>
+        <div class="location">
 
-<div class="stats">
+            <div class="location-title">
+                🌲 UNKNOWN FOREST
+            </div>
 
-<div class="stat">
-<strong id="score">0</strong>
-<span>امتیاز</span>
-</div>
+            <div class="location-text">
+                STAGE <span id="stage">1</span>
+                · The journey begins...
+            </div>
 
-<div class="stat">
-<strong id="lives">100</strong>
-<span>❤️ جان</span>
-</div>
+        </div>
 
-<div class="stat">
-<strong id="rank">—</strong>
-<span>رتبه</span>
-</div>
+    </section>
 
-</div>
+    <div class="weather">
+        🌧️ WEATHER: Rain · 🌩️ Thunderstorm possible
+    </div>
 
-</header>
+    <!-- MISSION -->
 
+    <section class="card">
 
-<section class="section">
+        <div class="card-title">
+            🎯 MISSION
+        </div>
 
-<div class="section-title">
-📅 ۷ روز مسابقه
-</div>
+        <div class="card-text">
+            Explore the unknown forest and search for
+            the first fragment of the ancient map.
+            Be careful. Something may be watching you.
+        </div>
 
-<div class="days" id="days"></div>
+        <div class="actions">
 
-</section>
+            <button class="btn primary"
+                    onclick="exploreMission()">
+                🔎 EXPLORE
+            </button>
 
+            <button class="btn"
+                    onclick="findMap()">
+                🗺️ SEARCH MAP
+            </button>
 
-<section class="section">
+            <button class="btn gold"
+                    onclick="findKey()">
+                🔑 SEARCH KEY
+            </button>
 
-<div class="section-title" id="dayTitle">
-روز ۱
-</div>
+            <button class="btn danger"
+                    onclick="openNextStage()">
+                🚪 NEXT GATE
+            </button>
 
-<div id="missions"></div>
+        </div>
 
-</section>
+        <div id="game-message"
+             class="message">
+            Your adventure is waiting...
+        </div>
 
+    </section>
 
-<section class="section">
+    <!-- REFERRAL -->
 
-<div class="section-title">
-🏆 سه نفر برتر
-</div>
+    <section class="referral">
 
-<div class="leader">
+        <h2>👥 INVITE FRIENDS</h2>
 
-<div class="player">
-<div class="medal">🥇</div>
-<div>
-<div class="player-name">نفر اول</div>
-<div class="player-small">مدال طلا</div>
-</div>
-<div class="prize">۴۵٪</div>
-</div>
+        <div class="referral-count">
+            <span id="referrals">0</span> / 5
+        </div>
 
-<div class="player">
-<div class="medal">🥈</div>
-<div>
-<div class="player-name">نفر دوم</div>
-<div class="player-small">مدال نقره</div>
-</div>
-<div class="prize">۳۵٪</div>
-</div>
+        <small>
+            Invite 5 successful players and receive
+            ❤️ 50 Energy.
+        </small>
 
-<div class="player">
-<div class="medal">🥉</div>
-<div>
-<div class="player-name">نفر سوم</div>
-<div class="player-small">مدال برنز</div>
-</div>
-<div class="prize">۲۰٪</div>
-</div>
+        <div class="actions">
 
-</div>
+            <button class="btn primary"
+                    onclick="inviteFriends()">
+                🔗 INVITE FRIENDS
+            </button>
 
-<div class="box" style="margin-top:10px">
+        </div>
 
-💰 استخر جایزه مسابقه در نسخه سروری محاسبه می‌شود.
+    </section>
 
-<br>
-🥇 نفر اول: ۴۵٪
-<br>
-🥈 نفر دوم: ۳۵٪
-<br>
-🥉 نفر سوم: ۲۰٪
+    <!-- EXPLANATION -->
 
-<br><br>
+    <section class="info">
 
-در نسخه نهایی، نام و مبلغ دقیق سه نفر برتر در همین قسمت نمایش داده می‌شود.
+        <h2>📖 HOW TO PLAY</h2>
 
-</div>
+        <p>
+            Explore dangerous environments, discover
+            hidden maps, solve mysteries and collect keys.
+        </p>
 
-</section>
+        <p>
+            🗺️ Map fragments connect together.
+            When you complete a route, a new gate can open.
+        </p>
 
+        <p>
+            🔑 Keys unlock new regions and mysterious
+            locations.
+        </p>
 
-<section class="section special">
+        <p>
+            🌧️ Weather, darkness, storms, creatures,
+            traps and unexpected events can change
+            your mission.
+        </p>
 
-<div class="section-title">
-⚡ بسته ویژه مسابقه
-</div>
+        <p>
+            ⏱️ Some missions will contain timed
+            archaeology and geology questions.
+        </p>
 
-<div class="package">
+        <p>
+            🌍 Your adventure can continue through
+            ancient civilizations, forgotten lands,
+            mysterious islands and unknown worlds.
+        </p>
 
-<div>
-<div class="package-name">
-۴۰۰ ❤️ جان
-</div>
+        <p>
+            ♾️ WORLD VAULT has no final ending.
+            New mysteries and regions can continue
+            to appear.
+        </p>
 
-<div class="notice">
-برای ادامه مسابقه در صورت کمبود جان
-</div>
-</div>
+    </section>
 
-<div>
-<div class="package-price">۴۰ USDT</div>
+    <!-- COMPETITION -->
 
-<button class="buy" onclick="buyLives(400,40)">
-خرید
-</button>
-</div>
+    <section class="competition">
 
-</div>
+        <h2>🏆 COMPETITION</h2>
 
-<div class="box" style="margin-top:10px">
+        <p style="margin-top:8px;color:#aeb8cc;">
+            Global competitions are coming soon.
+        </p>
 
-🚨 اگر جانت کم شده، بسته ویژه برای ادامه بازی در دسترس است.
-<br>
-خرید کاملاً اختیاری است و برای ادامه بازی اجباری نیست.
+        <span class="coming">
+            🔒 COMING SOON
+        </span>
 
-</div>
+    </section>
 
-</section>
+    <!-- PAYMENT -->
 
+    <section class="payment">
 
-<section class="section">
+        <h2>💰 VAULT WALLET</h2>
 
-<div class="section-title">
-❤️ بسته‌های جان
-</div>
+        <div class="payment-box">
 
-<div class="packages">
+            <div>
+                Crypto / Fiat
+            </div>
 
-<div class="package">
-<div class="package-name">۲۰ جان</div>
-<div class="package-price">۲ USDT</div>
-<button class="buy" onclick="buyLives(20,2)">خرید</button>
-</div>
+            <br>
 
-<div class="package">
-<div class="package-name">۴۰ جان</div>
-<div class="package-price">۳ USDT</div>
-<button class="buy" onclick="buyLives(40,3)">خرید</button>
-</div>
+            <div>
+                💵 USDT
+            </div>
 
-<div class="package">
-<div class="package-name">۱۰۰ جان</div>
-<div class="package-price">۱۰ USDT</div>
-<button class="buy" onclick="buyLives(100,10)">خرید</button>
-</div>
+            <div style="margin-top:8px;">
+                🌐 TRON — TRC20
+            </div>
 
-</div>
+            <span class="coming">
+                🔒 PAYMENTS COMING SOON
+            </span>
 
-</section>
+        </div>
 
+    </section>
 
-<section class="section">
-
-<div class="section-title">
-🎁 دعوت دوستان
-</div>
-
-<div class="box">
-
-۵ بازیکن فعال را دعوت کن و ۴۰ جان دریافت کن.
-
-<br>
-
-لینک دعوت واقعی در نسخه متصل به Telegram Bot ساخته می‌شود.
-
-</div>
-
-<button class="primary" style="margin-top:10px" onclick="invite()">
-🔗 دعوت دوستان
-</button>
-
-</section>
-
-
-<section class="section">
-
-<div class="section-title">
-👤 شخصیت و آواتار
-</div>
-
-<div class="feature">
-
-<div class="box">
-ساخت شخصیت و آواتار — <b style="color:#ffd54a">۲ USDT</b>
-</div>
-
-<button class="primary" onclick="character()">
-👤 ساخت شخصیت
-</button>
-
-<div class="box">
-هر ارتقا — <b style="color:#ffd54a">۲ USDT</b>
-</div>
-
-<button class="primary" onclick="upgrade()">
-⬆️ ارتقای شخصیت
-</button>
-
-<div class="box">
-ساخت گروه + پیام + درخواست جان + آواتار گروه — <b style="color:#ffd54a">۳ USDT</b>
-</div>
-
-<button class="primary" onclick="createGroup()">
-👥 ساخت گروه
-</button>
+    <footer class="footer">
+        WORLD VAULT © 2026
+        <br>
+        Explore. Survive. Discover. Unlock.
+    </footer>
 
 </div>
-
-</section>
-
-
-<section class="section">
-
-<div class="section-title">
-🆕 بازیکنان تازه‌وارد
-</div>
-
-<div class="box">
-
-اگر تازه وارد شدی، می‌توانی روزهای قبلی را هم بازی کنی تا از رقابت عقب نمانی.
-
-<br><br>
-
-⚠️ امتیاز نهایی در نسخه واقعی باید روی سرور ذخیره شود.
-
-</div>
-
-</section>
-
-
-<div class="footer">
-WORLD VAULT © 2026
-<br>
-نسخه آزمایشی مسابقه
-</div>
-
-</div>
-
 
 <script>
 
 /* =========================================
-   WORLD VAULT — 7 DAY GAME
-========================================= */
+   WORLD VAULT API
+   ========================================= */
 
-const GAME_KEY = "WORLD_VAULT_7DAY_V2";
-
-const TOTAL_TIME = 168 * 60 * 60 * 1000;
-
-let game = JSON.parse(
- localStorage.getItem(GAME_KEY) || "null"
-);
-
-if(!game){
-
- game = {
-   start: Date.now(),
-   score: 0,
-   lives: 100,
-   day: 1,
-   name: "بازیکن مهمان",
-   avatar: "🧑",
-   answers: {},
-   invited: 0,
-   character: false,
-   upgrades: 0
- };
-
- save();
-
-}
-
-
-/* =========================================
-   QUESTIONS
-========================================= */
-
-const normalQuestions = [
-
-{
- q:"پایتخت ایران کدام است؟",
- a:["تهران","شیراز","تبریز","رشت"],
- c:0
-},
-
-{
- q:"کدام سیاره به خورشید نزدیک‌تر است؟",
- a:["زمین","مریخ","عطارد","زهره"],
- c:2
-},
-
-{
- q:"۱۲ × ۸ چند است؟",
- a:["۸۶","۹۲","۹۶","۱۰۸"],
- c:2
-},
-
-{
- q:"مجموع زوایای مثلث چند درجه است؟",
- a:["۹۰","۱۲۰","۱۸۰","۳۶۰"],
- c:2
-},
-
-{
- q:"کدام مورد زبان برنامه‌نویسی است؟",
- a:["Python","JPEG","MP3","PNG"],
- c:0
-},
-
-{
- q:"ریشه دوم ۱۴۴ چند است؟",
- a:["۱۰","۱۱","۱۲","۱۴"],
- c:2
-},
-
-{
- q:"یک هفته چند روز است؟",
- a:["۵","۶","۷","۸"],
- c:2
-},
-
-{
- q:"۲ به توان ۱۰ چند است؟",
- a:["۵۱۲","۱۰۰۰","۱۰۲۴","۲۰۴۸"],
- c:2
-},
-
-{
- q:"مساحت مربع با ضلع ۷ چند است؟",
- a:["۱۴","۲۸","۴۹","۵۶"],
- c:2
-},
-
-{
- q:"کدام عدد اول است؟",
- a:["۲۱","۲۵","۲۷","۲۹"],
- c:3
-}
-
-];
-
-
-const hardQuestions = [
-
-{
- q:"اگر ۱۵٪ یک عدد برابر ۳۰ باشد، عدد چند است؟",
- a:["۱۰۰","۱۵۰","۲۰۰","۲۵۰"],
- c:2
-},
-
-{
- q:"عدد بعدی چیست؟ ۳، ۶، ۱۲، ۲۴، ؟",
- a:["۳۶","۴۲","۴۸","۵۴"],
- c:2
-},
-
-{
- q:"میانگین ۱۰، ۲۰ و ۳۰ چند است؟",
- a:["۱۵","۲۰","۲۵","۳۰"],
- c:1
-},
-
-{
- q:"۲ به توان ۸ چند است؟",
- a:["۱۲۸","۲۵۶","۵۱۲","۱۰۲۴"],
- c:1
-},
-
-{
- q:"محیط مربع ۴۸ است. ضلع آن چند است؟",
- a:["۸","۱۰","۱۲","۱۴"],
- c:2
-},
-
-{
- q:"۲۵٪ عدد ۸۰ چند است؟",
- a:["۱۵","۲۰","۲۵","۳۰"],
- c:1
-},
-
-{
- q:"اگر قیمت کالایی ۲۰۰ باشد و ۱۰٪ تخفیف بخورد، قیمت نهایی؟",
- a:["۱۷۰","۱۸۰","۱۹۰","۲۰۰"],
- c:1
-},
-
-{
- q:"حاصل ۷ × ۹ + ۳ چیست؟",
- a:["۶۳","۶۶","۷۰","۷۲"],
- c:1
-},
-
-{
- q:"یک ساعت چند ثانیه دارد؟",
- a:["۱۸۰۰","۳۶۰۰","۴۸۰۰","۶۰۰۰"],
- c:1
-},
-
-{
- q:"اگر ۵ کارگر کاری را در ۱۰ روز انجام دهند، سؤال مربوط به سرعت کار به چه چیزی وابسته است؟",
- a:["زمان و نیروی کار","رنگ ساختمان","آب‌وهوا فقط","نام کارگر"],
- c:0
-}
-
-];
-
-
-const extremeQuestions = [
-
-{
- q:"دنباله ۱، ۱، ۲، ۳، ۵، ۸، ؟",
- a:["۱۰","۱۱","۱۲","۱۳"],
- c:3
-},
-
-{
- q:"۲۰٪ یک عدد ۳۶ است. عدد چیست؟",
- a:["۱۶۰","۱۷۰","۱۸۰","۲۰۰"],
- c:2
-},
-
-{
- q:"دنباله ۳، ۶، ۱۲، ۲۴، ۴۸، ؟",
- a:["۷۲","۸۴","۹۶","۱۰۸"],
- c:2
-},
-
-{
- q:"میانگین ۱۲، ۱۸ و X برابر ۲۰ است. X چند است؟",
- a:["۲۴","۲۸","۳۰","۳۲"],
- c:2
-},
-
-{
- q:"۲⁵ × ۳² چند است؟",
- a:["۱۴۴","۲۱۶","۲۸۸","۳۲۴"],
- c:1
-},
-
-{
- q:"کالا با ۲۵٪ تخفیف ۱۵۰ شده. قیمت اولیه؟",
- a:["۱۷۵","۱۹۰","۲۰۰","۲۲۵"],
- c:2
-},
-
-{
- q:"اگر A=1 و B=2 و C=3 باشد، CAB چند است؟",
- a:["۵","۶","۷","۸"],
- c:1
-},
-
-{
- q:"محیط مربع ۶۴ است. مساحت آن؟",
- a:["۶۴","۱۲۸","۲۵۶","۵۱۲"],
- c:2
-},
-
-{
- q:"۱۶۸ ساعت دقیقاً چند روز است؟",
- a:["۵","۶","۷","۸"],
- c:2
-},
-
-{
- q:"اگر سرعت یک خودرو دو برابر شود و مسافت ثابت بماند، زمان تقریبی چه تغییری می‌کند؟",
- a:["دو برابر","نصف","سه برابر","ثابت"],
- c:1
-}
-
-];
-
-
-/* =========================================
-   SAVE
-========================================= */
-
-function save(){
-
- localStorage.setItem(
-   GAME_KEY,
-   JSON.stringify(game)
- );
-
-}
+const WORLD_VAULT_API =
+    "https://YOUR-SERVER-DOMAIN.com";
 
 
 /* =========================================
    PLAYER
-========================================= */
+   ========================================= */
 
-function updateProfile(){
+let player = {
 
- document.getElementById("playerName")
- .innerText = game.name;
+    id: null,
+    lives: 10,
+    score: 0,
+    mapFragments: 0,
+    keys: 0,
+    stage: 1,
+    seed: null,
+    referrals: 0
 
- document.getElementById("avatar")
- .innerText = game.avatar;
+};
+
+
+/* =========================================
+   TELEGRAM USER
+   ========================================= */
+
+function getTelegramUser() {
+
+    if (
+        window.Telegram &&
+        window.Telegram.WebApp &&
+        window.Telegram.WebApp.initDataUnsafe &&
+        window.Telegram.WebApp.initDataUnsafe.user
+    ) {
+
+        return String(
+            window.Telegram.WebApp.initDataUnsafe.user.id
+        );
+
+    }
+
+    let localId =
+        localStorage.getItem(
+            "world_vault_test_user"
+        );
+
+    if (!localId) {
+
+        localId =
+            "test_" +
+            Math.random()
+                .toString(36)
+                .substring(2, 10);
+
+        localStorage.setItem(
+            "world_vault_test_user",
+            localId
+        );
+
+    }
+
+    return localId;
+}
+
+
+/* =========================================
+   LOAD PLAYER
+   ========================================= */
+
+async function loadPlayer(userId) {
+
+    try {
+
+        if (
+            WORLD_VAULT_API.includes(
+                "YOUR-SERVER-DOMAIN"
+            )
+        ) {
+
+            showMessage(
+                "🎮 Demo mode — connect the server to save your progress."
+            );
+
+            player.id = userId;
+
+            updateUI();
+
+            return;
+        }
+
+        const response = await fetch(
+            `${WORLD_VAULT_API}/api/user/${encodeURIComponent(userId)}`
+        );
+
+        const data = await response.json();
+
+        if (!data.success) {
+            throw new Error("Player loading failed");
+        }
+
+        player.id =
+            data.user.id;
+
+        player.lives =
+            data.user.lives;
+
+        player.score =
+            data.user.score;
+
+        player.mapFragments =
+            data.user.map_fragments;
+
+        player.keys =
+            data.user.keys;
+
+        player.stage =
+            data.user.current_stage;
+
+        player.seed =
+            data.user.world_seed;
+
+        player.referrals =
+            data.user.referral_count || 0;
+
+        updateUI();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        showMessage(
+            "⚠️ Server connection failed."
+        );
+
+    }
 
 }
 
 
 /* =========================================
-   DAYS
-========================================= */
+   UPDATE UI
+   ========================================= */
 
-function renderDays(){
+function updateUI() {
 
- const box=document.getElementById("days");
+    document.getElementById("lives")
+        .textContent = player.lives;
 
- box.innerHTML="";
+    document.getElementById("score")
+        .textContent = player.score;
 
- for(let day=1;day<=7;day++){
+    document.getElementById("maps")
+        .textContent = player.mapFragments;
 
-   const el=document.createElement("button");
+    document.getElementById("keys")
+        .textContent = player.keys;
 
-   el.className="day";
+    document.getElementById("stage")
+        .textContent = player.stage;
 
-   if(day===game.day)
-     el.classList.add("active");
-
-   if(day===7)
-     el.classList.add("final");
-
-   if(isDayFinished(day))
-     el.classList.add("done");
-
-   el.innerHTML=
-    `<div class="day-number">
-      ${day===7?"🔥":"روز "+day}
-     </div>
-     <div class="day-info">
-      ${day===7?"فوق‌العاده سخت":"۱۰ مأموریت"}
-     </div>`;
-
-   el.onclick=()=>{
-     game.day=day;
-     save();
-     render();
-   };
-
-   box.appendChild(el);
-
- }
+    document.getElementById("referrals")
+        .textContent = player.referrals;
 
 }
 
 
 /* =========================================
-   DAY FINISH
-========================================= */
+   MESSAGE
+   ========================================= */
 
-function isDayFinished(day){
+function showMessage(message) {
 
- for(let i=0;i<10;i++){
-
-   if(!game.answers[day+"-"+i])
-     return false;
-
- }
-
- return true;
+    document.getElementById(
+        "game-message"
+    ).textContent = message;
 
 }
 
 
 /* =========================================
-   QUESTIONS
-========================================= */
+   EXPLORE
+   ========================================= */
 
-function getQuestion(day,index){
+function exploreMission() {
 
- if(day===7)
-   return extremeQuestions[index];
+    const events = [
 
- return index%2===0
-   ?normalQuestions[index]
-   :hardQuestions[index];
+        "🌧️ Heavy rain begins. You hear something moving in the forest...",
 
-}
+        "⚡ Lightning strikes nearby! A hidden path appears.",
 
+        "👻 Something moved behind the trees...",
 
-/* =========================================
-   RENDER MISSIONS
-========================================= */
+        "🐺 You hear wild animals nearby. Stay alert.",
 
-function renderMissions(){
+        "🌫️ Thick fog covers the forest.",
 
- const container=
- document.getElementById("missions");
+        "🪤 You discovered an ancient trap!",
 
- container.innerHTML="";
+        "🏚️ You found an abandoned cabin.",
 
- const title=
- document.getElementById("dayTitle");
+        "🗿 Strange symbols appear on an ancient stone."
 
- title.innerText=
- game.day===7
- ? "🔥 روز ۷ — فوق‌العاده سخت"
- : "روز "+game.day;
+    ];
 
- for(let i=0;i<10;i++){
+    const event =
+        events[
+            Math.floor(
+                Math.random() *
+                events.length
+            )
+        ];
 
-   const q=getQuestion(game.day,i);
-
-   const id=
-    game.day+"-"+i;
-
-   const mission=
-    document.createElement("div");
-
-   mission.className="mission";
-
-   if(i%2===1 && game.day!==7)
-     mission.classList.add("hard");
-
-   if(game.day===7)
-     mission.classList.add("final");
-
-   const done=
-    game.answers[id];
-
-   mission.innerHTML=`
-
-    <div class="mission-title">
-     ${game.day===7
-       ?"🔥 مأموریت فوق‌العاده سخت"
-       :(i%2===0
-         ?"🎯 مأموریت معمولی"
-         :"⚡ مأموریت سخت")}
-     — ${i+1}/10
-    </div>
-
-    <div class="question">
-     ${q.q}
-    </div>
-
-    <div class="answers"></div>
-
-   `;
-
-   const answers=
-    mission.querySelector(".answers");
-
-   q.a.forEach((answer,index)=>{
-
-     const btn=
-      document.createElement("button");
-
-     btn.className="answer";
-
-     btn.innerText=
-      `${String.fromCharCode(1575+index)}) ${answer}`;
-
-     if(done){
-
-       btn.disabled=true;
-
-       if(index===q.c)
-         btn.classList.add("correct");
-
-     }
-
-     btn.onclick=()=>{
-
-       answerQuestion(
-        game.day,
-        i,
-        index,
-        q,
-        answers
-       );
-
-     };
-
-     answers.appendChild(btn);
-
-   });
-
-   container.appendChild(mission);
-
- }
+    showMessage(event);
 
 }
 
 
 /* =========================================
-   ANSWER
-========================================= */
+   FIND MAP
+   ========================================= */
 
-function answerQuestion(
- day,
- index,
- selected,
- question,
- answers
-){
+async function findMap() {
 
- const id=day+"-"+index;
+    showMessage(
+        "🔎 Searching the area..."
+    );
 
- if(game.answers[id])
-   return;
+    await wait(1000);
 
- const buttons=
- answers.querySelectorAll("button");
+    if (Math.random() < 0.65) {
 
- buttons.forEach(b=>{
-   b.disabled=true;
- });
+        player.mapFragments++;
 
- if(selected===question.c){
+        player.score += 100;
 
-   buttons[selected]
-    .classList.add("correct");
+        updateUI();
 
-   let points=10;
+        showMessage(
+            "🗺️ MAP FRAGMENT FOUND! +100 SCORE"
+        );
 
-   if(day===7)
-     points=30;
+        await apiMapFound();
 
-   else if(index%2===1)
-     points=20;
+    }
 
-   game.score+=points;
+    else {
 
- }else{
+        showMessage(
+            "❌ Nothing here... Search another location."
+        );
 
-   buttons[selected]
-    .classList.add("wrong");
-
-   buttons[question.c]
-    .classList.add("correct");
-
-   game.lives=
-    Math.max(0,game.lives-2);
-
- }
-
- game.answers[id]=true;
-
- save();
-
- updateStats();
-
- setTimeout(
-  render,
-  450
- );
+    }
 
 }
 
 
 /* =========================================
-   STATS
-========================================= */
+   FIND KEY
+   ========================================= */
 
-function updateStats(){
+async function findKey() {
 
- document.getElementById("score")
- .innerText=
- game.score.toLocaleString("fa-IR");
+    showMessage(
+        "🔎 Searching for an ancient key..."
+    );
 
- document.getElementById("lives")
- .innerText=
- game.lives.toLocaleString("fa-IR");
+    await wait(1200);
 
- let rank="—";
+    if (Math.random() < 0.35) {
 
- if(game.score>=600)
-   rank="🥇";
+        player.keys++;
 
- else if(game.score>=400)
-   rank="🥈";
+        player.score += 250;
 
- else if(game.score>=200)
-   rank="🥉";
+        updateUI();
 
- document.getElementById("rank")
- .innerText=rank;
+        showMessage(
+            "🔑 ANCIENT KEY FOUND! +250 SCORE"
+        );
 
-}
+        await apiKeyFound();
 
+    }
 
-/* =========================================
-   TIMER
-========================================= */
+    else {
 
-function updateTimer(){
+        showMessage(
+            "❌ The key is not here..."
+        );
 
- const remaining=
- Math.max(
-  0,
-  TOTAL_TIME -
-  (Date.now()-game.start)
- );
-
- const h=
- Math.floor(
-  remaining/3600000
- );
-
- const m=
- Math.floor(
-  (remaining%3600000)/60000
- );
-
- const s=
- Math.floor(
-  (remaining%60000)/1000
- );
-
- document.getElementById("timer")
- .innerText=
- String(h).padStart(3,"0")
- +":"
- +String(m).padStart(2,"0")
- +":"
- +String(s).padStart(2,"0");
-
- const app=
- document.body;
-
- if(
-  remaining<=
-  5*60*60*1000
- ){
-
-   app.classList.add("danger");
-
-   document.getElementById(
-    "timerMessage"
-   ).innerText=
-    "🚨 ۵ ساعت آخر مسابقه!";
-
- }else{
-
-   app.classList.remove("danger");
-
-   document.getElementById(
-    "timerMessage"
-   ).innerText=
-    "مسابقه در جریان است";
-
- }
-
- if(remaining<=0){
-
-   document.getElementById(
-    "timerMessage"
-   ).innerText=
-    "🏁 مسابقه به پایان رسید";
-
- }
+    }
 
 }
 
 
 /* =========================================
-   BUY
-========================================= */
+   NEXT STAGE
+   ========================================= */
 
-function buyLives(lives,price){
+async function openNextStage() {
 
- const confirmBuy=
- confirm(
-  `بسته ${lives} جان\n\n`+
-  `قیمت: ${price} USDT\n\n`+
-  `در نسخه آزمایشی پرداخت واقعی انجام نمی‌شود.`
- );
+    if (player.keys <= 0) {
 
- if(!confirmBuy)
-   return;
+        showMessage(
+            "🔒 You need a key to open this gate."
+        );
 
- alert(
-  "این بخش فعلاً نمایشی است.\n\n"+
-  "در نسخه نهایی، پرداخت USDT توسط سرور تأیید می‌شود و سپس جان اضافه خواهد شد."
- );
+        return;
+    }
+
+    player.keys--;
+
+    player.stage++;
+
+    player.score += 500;
+
+    updateUI();
+
+    showMessage(
+        "🚪 GATE OPENED! NEW REGION UNLOCKED!"
+    );
+
+    await apiNextStage();
 
 }
 
 
 /* =========================================
    INVITE
-========================================= */
+   ========================================= */
 
-function invite(){
+function inviteFriends() {
 
- if(
-  window.Telegram &&
-  Telegram.WebApp
- ){
+    const text =
+        "🌍 Join me in WORLD VAULT! Explore the unknown world.";
 
-   try{
+    const url =
+        window.location.origin +
+        window.location.pathname;
 
-    Telegram.WebApp.switchInlineQuery(
-     "من را در WORLD VAULT همراهی کن!",
-     ["users"]
+    const shareUrl =
+        "https://t.me/share/url?url=" +
+        encodeURIComponent(url) +
+        "&text=" +
+        encodeURIComponent(text);
+
+    window.open(
+        shareUrl,
+        "_blank"
     );
 
-   }catch(e){
+}
 
-    alert(
-     "لینک دعوت در نسخه Telegram Bot فعال خواهد شد."
+
+/* =========================================
+   API SCORE
+   ========================================= */
+
+async function apiScore(amount) {
+
+    if (
+        !player.id ||
+        WORLD_VAULT_API.includes(
+            "YOUR-SERVER-DOMAIN"
+        )
+    ) return;
+
+    try {
+
+        const response =
+            await fetch(
+                `${WORLD_VAULT_API}/api/score`,
+                {
+                    method: "POST",
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+                    body: JSON.stringify({
+                        userId:
+                            player.id,
+                        amount:
+                            amount
+                    })
+                }
+            );
+
+        const data =
+            await response.json();
+
+        if (data.success) {
+
+            player.score =
+                data.score;
+
+            updateUI();
+
+        }
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+
+/* =========================================
+   API MAP
+   ========================================= */
+
+async function apiMapFound() {
+
+    if (
+        !player.id ||
+        WORLD_VAULT_API.includes(
+            "YOUR-SERVER-DOMAIN"
+        )
+    ) return;
+
+    try {
+
+        await fetch(
+            `${WORLD_VAULT_API}/api/map/found`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+                body: JSON.stringify({
+                    userId:
+                        player.id
+                })
+            }
+        );
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+
+/* =========================================
+   API KEY
+   ========================================= */
+
+async function apiKeyFound() {
+
+    if (
+        !player.id ||
+        WORLD_VAULT_API.includes(
+            "YOUR-SERVER-DOMAIN"
+        )
+    ) return;
+
+    try {
+
+        await fetch(
+            `${WORLD_VAULT_API}/api/key/found`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+                body: JSON.stringify({
+                    userId:
+                        player.id
+                })
+            }
+        );
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+
+/* =========================================
+   API NEXT STAGE
+   ========================================= */
+
+async function apiNextStage() {
+
+    if (
+        !player.id ||
+        WORLD_VAULT_API.includes(
+            "YOUR-SERVER-DOMAIN"
+        )
+    ) return;
+
+    try {
+
+        await fetch(
+            `${WORLD_VAULT_API}/api/stage/next`,
+            {
+                method: "POST",
+                headers: {
+                    "Content-Type":
+                        "application/json"
+                },
+                body: JSON.stringify({
+                    userId:
+                        player.id
+                })
+            }
+        );
+
+    }
+    catch (error) {
+
+        console.error(error);
+
+    }
+
+}
+
+
+/* =========================================
+   UTILITY
+   ========================================= */
+
+function wait(ms) {
+
+    return new Promise(
+        resolve =>
+            setTimeout(
+                resolve,
+                ms
+            )
     );
-
-   }
-
- }else{
-
-   alert(
-    "لینک دعوت اختصاصی در نسخه متصل به Telegram Bot ساخته می‌شود."
-   );
-
- }
-
-}
-
-
-/* =========================================
-   CHARACTER
-========================================= */
-
-function character(){
-
- if(game.character){
-
-   alert(
-    "شخصیت شما قبلاً ساخته شده است."
-   );
-
-   return;
-
- }
-
- const ok=
- confirm(
-  "ساخت شخصیت و آواتار\n\n"+
-  "قیمت: ۲ USDT\n\n"+
-  "در نسخه آزمایشی پرداخت انجام نمی‌شود."
- );
-
- if(!ok)
-   return;
-
- game.character=true;
-
- save();
-
- alert(
-  "ساخت شخصیت در نسخه آزمایشی ثبت شد.\n"+
-  "پرداخت واقعی بعداً به سرور متصل می‌شود."
- );
-
-}
-
-
-/* =========================================
-   UPGRADE
-========================================= */
-
-function upgrade(){
-
- if(!game.character){
-
-   alert(
-    "ابتدا شخصیت خود را بساز."
-   );
-
-   return;
-
- }
-
- game.upgrades++;
-
- save();
-
- alert(
-  "ارتقای شخصیت\n\n"+
-  "هزینه هر ارتقا: ۲ USDT\n\n"+
-  "نسخه آزمایشی: ارتقا ثبت شد."
- );
-
-}
-
-
-/* =========================================
-   GROUP
-========================================= */
-
-function createGroup(){
-
- const ok=
- confirm(
-  "ساخت گروه\n\n"+
-  "شامل:\n"+
-  "👥 گروه\n"+
-  "💬 پیام\n"+
-  "❤️ درخواست جان\n"+
-  "🖼️ آواتار گروه\n\n"+
-  "قیمت: ۳ USDT\n\n"+
-  "در نسخه آزمایشی پرداخت واقعی انجام نمی‌شود."
- );
-
- if(!ok)
-   return;
-
- alert(
-  "گروه در نسخه آزمایشی آماده است.\n"+
-  "سیستم واقعی گروه در نسخه Telegram متصل خواهد شد."
- );
-
-}
-
-
-/* =========================================
-   TELEGRAM
-========================================= */
-
-function initTelegram(){
-
- if(
-  window.Telegram &&
-  Telegram.WebApp
- ){
-
-   try{
-
-     Telegram.WebApp.ready();
-
-     Telegram.WebApp.expand();
-
-     const user=
-      Telegram.WebApp.initDataUnsafe?.user;
-
-     if(user){
-
-       game.name=
-        user.first_name ||
-        user.username ||
-        game.name;
-
-       save();
-
-       updateProfile();
-
-     }
-
-   }catch(e){}
-
- }
-
-}
-
-
-/* =========================================
-   RENDER
-========================================= */
-
-function render(){
-
- renderDays();
-
- renderMissions();
-
- updateStats();
-
- updateProfile();
 
 }
 
 
 /* =========================================
    START
-========================================= */
+   ========================================= */
 
-initTelegram();
+document.addEventListener(
+    "DOMContentLoaded",
+    () => {
 
-render();
+        const userId =
+            getTelegramUser();
 
-updateTimer();
+        loadPlayer(userId);
 
-setInterval(
- updateTimer,
- 1000
+    }
 );
 
 </script>
