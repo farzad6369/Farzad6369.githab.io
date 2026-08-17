@@ -2,368 +2,364 @@
 <html lang="fa" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>WORLD VAULT</title>
 
 <style>
-*{
-  box-sizing:border-box;
-}
+*{box-sizing:border-box}
 
 body{
-  margin:0;
-  min-height:100vh;
-  font-family:Arial,Tahoma,sans-serif;
-  color:white;
-  background:
-    radial-gradient(circle at 50% 20%,#31512d 0%,#111b13 30%,#050706 70%);
+margin:0;
+font-family:Tahoma,Arial,sans-serif;
+color:white;
+background:linear-gradient(145deg,#070b18,#182441);
+min-height:100vh
 }
 
-.header{
-  height:65px;
-  padding:10px 15px;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  background:#080b09;
-  border-bottom:1px solid #303830;
+.app{
+max-width:520px;
+margin:auto;
+padding:18px
 }
 
 .logo{
-  color:#e5b746;
-  font-size:21px;
-  font-weight:bold;
-  letter-spacing:2px;
+text-align:center;
+font-size:31px;
+font-weight:900;
+margin-top:10px
 }
 
-.stats{
-  display:flex;
-  gap:8px;
-}
-
-.stat{
-  background:#171c19;
-  padding:8px 12px;
-  border-radius:20px;
-  border:1px solid #414841;
-}
-
-.container{
-  max-width:650px;
-  margin:auto;
-  padding:20px;
-}
-
-.screen{
-  min-height:calc(100vh - 65px);
-  display:flex;
-  align-items:center;
-  justify-content:center;
+.tag{
+text-align:center;
+color:#aebce0;
+margin:8px 0 22px
 }
 
 .card{
-  width:100%;
-  background:rgba(8,12,10,.94);
-  border:1px solid #424b43;
-  border-radius:20px;
-  padding:25px;
-  text-align:center;
-  box-shadow:0 15px 50px rgba(0,0,0,.7);
-}
-
-.moon{
-  font-size:70px;
-}
-
-h1{
-  color:#e5b746;
-  font-size:42px;
-  margin:10px 0;
+background:#ffffff10;
+border:1px solid #ffffff1c;
+border-radius:22px;
+padding:18px;
+margin:12px 0;
+box-shadow:0 12px 35px #0005
 }
 
 h2{
-  color:#e2b644;
+margin:0 0 14px
 }
 
-.subtitle{
-  color:#ccc;
-  margin-bottom:25px;
+.muted{
+color:#aeb9d4;
+font-size:13px
+}
+
+label{
+display:block;
+color:#c9d4ef;
+font-size:13px;
+margin-top:12px
+}
+
+input,select{
+width:100%;
+padding:14px;
+margin-top:6px;
+border-radius:13px;
+border:1px solid #3a4b72;
+background:#0d1427;
+color:white;
+font-size:15px
 }
 
 button{
-  width:100%;
-  padding:15px;
-  margin:7px 0;
-  border-radius:13px;
-  border:1px solid #596259;
-  color:white;
-  font-size:16px;
-  font-weight:bold;
-  cursor:pointer;
-  background:#202821;
+width:100%;
+border:0;
+border-radius:14px;
+padding:14px;
+margin-top:12px;
+background:linear-gradient(135deg,#f0c75e,#a96a18);
+font-weight:900;
+font-size:15px;
+cursor:pointer
 }
 
-button:active{
-  transform:scale(.98);
+button:disabled{
+opacity:.5
 }
 
-.start{
-  background:linear-gradient(#5b9e42,#285d1e);
+.hero{
+text-align:center
 }
 
-.blue{
-  background:linear-gradient(#286a92,#173b51);
+.crown{
+font-size:62px
 }
 
-.gold{
-  background:linear-gradient(#b98929,#69430d);
+.name{
+font-size:25px;
+font-weight:bold;
+margin:8px
 }
 
-.choice{
-  text-align:right;
-  background:#151b17;
+.stats{
+display:grid;
+grid-template-columns:repeat(3,1fr);
+gap:8px
 }
 
-.choice:hover{
-  background:#29342b;
+.stat{
+background:#0d1427;
+border-radius:14px;
+padding:11px;
+text-align:center;
+font-size:12px
 }
 
-.progress{
-  height:9px;
-  background:#242a26;
-  border-radius:20px;
-  margin:15px 0;
-  overflow:hidden;
+.num{
+font-size:21px;
+font-weight:bold;
+margin-top:5px
 }
 
-.progressBar{
-  height:100%;
-  background:#d7aa3e;
-  width:10%;
+.mission{
+display:flex;
+align-items:center;
+justify-content:space-between;
+gap:8px;
+background:#0d1427;
+padding:11px;
+border-radius:13px;
+margin:8px 0
 }
 
-.message{
-  min-height:35px;
-  padding:8px;
+.mission button{
+width:auto;
+margin:0;
+padding:8px 12px
 }
 
-.good{
-  color:#72e45c;
+.rank{
+display:flex;
+justify-content:space-between;
+padding:11px;
+border-bottom:1px solid #ffffff12
 }
 
-.bad{
-  color:#ff7067;
-}
-
-.door{
-  font-size:70px;
-}
-
-.price{
-  font-size:32px;
-  font-weight:bold;
-  color:#6be45b;
-  margin:15px;
-}
-
-.hidden{
-  display:none;
+#game{
+display:none
 }
 
 .small{
-  color:#888;
-  font-size:12px;
-  margin-top:15px;
+font-size:11px;
+color:#7180a5;
+text-align:center;
+margin-top:20px
 }
 </style>
 </head>
 
 <body>
 
-<div class="header">
+<div class="app">
 
-<div class="logo">
-WORLD VAULT
+<div class="logo">👑 WORLD VAULT</div>
+
+<div class="tag">
+Build your kingdom. Write your history.
 </div>
+
+<!-- ساخت پادشاه -->
+<section id="setup" class="card">
+
+<h2>🏛️ ساخت پادشاهی</h2>
+
+<div class="muted">
+تو خودت پادشاه این جهان هستی.
+</div>
+
+<label>دوره تاریخی</label>
+
+<select id="era">
+
+<option value="هخامنشی">هخامنشی</option>
+<option value="اشکانی">اشکانی</option>
+<option value="ساسانی">ساسانی</option>
+<option value="سامانی">سامانی</option>
+<option value="سلجوقی">سلجوقی</option>
+<option value="خوارزمشاهی">خوارزمشاهی</option>
+<option value="ایلخانی">ایلخانی</option>
+<option value="تیموری">تیموری</option>
+<option value="صفوی">صفوی</option>
+<option value="افشاری">افشاری</option>
+<option value="زند">زند</option>
+
+</select>
+
+<label>نام پادشاه</label>
+
+<input
+id="king"
+maxlength="24"
+placeholder="مثلاً داریوش">
+
+<label>نام پادشاهی</label>
+
+<input
+id="kingdom"
+maxlength="28"
+placeholder="مثلاً خورشید پارس">
+
+<button onclick="begin()">
+👑 آغاز پادشاهی
+</button>
+
+</section>
+
+
+<!-- بازی -->
+
+<section id="game">
+
+<div class="card hero">
+
+<div class="crown">👑</div>
+
+<div class="name" id="showKing">
+—
+</div>
+
+<div class="muted" id="showEra">
+—
+</div>
+
+<div style="margin-top:10px">
+🏰
+<span id="showKingdom">—</span>
+</div>
+
+</div>
+
+
+<!-- آمار -->
 
 <div class="stats">
 
 <div class="stat">
-❤️ <span id="lives">5</span>
+⭐ امتیاز
+<div class="num" id="score">0</div>
 </div>
 
 <div class="stat">
-⭐ <span id="score">0</span>
+🔥 Streak
+<div class="num" id="streak">1</div>
+</div>
+
+<div class="stat">
+🏆 رتبه
+<div class="num" id="rank">#3</div>
 </div>
 
 </div>
 
-</div>
 
-
-<div class="container">
-
-
-<!-- HOME -->
-
-<div id="home" class="screen">
+<!-- مأموریت -->
 
 <div class="card">
 
-<div class="moon">
-🌕
-</div>
+<h2>🎯 مأموریت امروز</h2>
 
-<h1>
-WORLD VAULT
-</h1>
+<div class="mission">
 
-<div class="subtitle">
-سرزمین بعدی را هیچ‌کس نمی‌داند...
-</div>
+<span>
+📜 مطالعه یک رویداد تاریخی
+</span>
 
-<button class="start" onclick="startGame()">
-▶ شروع سفر
+<button onclick="claim(this,20)">
++20
 </button>
 
-<button class="blue" onclick="showRules()">
-❓ قوانین بازی
+</div>
+
+
+<div class="mission">
+
+<span>
+🗺️ کشف یک سرزمین
+</span>
+
+<button onclick="claim(this,30)">
++30
 </button>
+
+</div>
+
+
+<div class="mission">
+
+<span>
+⚔️ تمرین سپاه
+</span>
+
+<button onclick="claim(this,50)">
++50
+</button>
+
+</div>
+
+</div>
+
+
+<!-- باس -->
+
+<div class="card">
+
+<h2>🌋 World Boss</h2>
+
+<div class="muted">
+قدرت Boss:
+<b id="boss">1000</b>
+</div>
+
+<button onclick="attack()">
+⚔️ حمله به World Boss — +25
+</button>
+
+</div>
+
+
+<!-- رتبه بندی -->
+
+<div class="card">
+
+<h2>🏆 رتبه‌بندی</h2>
+
+<div class="rank">
+<span>🥇 شاه بزرگ</span>
+<b>1250</b>
+</div>
+
+<div class="rank">
+<span>🥈 فرمانروای شرق</span>
+<b>980</b>
+</div>
+
+<div class="rank">
+<span>🥉 تو</span>
+<b id="myScore">0</b>
+</div>
+
+</div>
+
+
+<button onclick="newKingdom()">
+🏰 پادشاهی جدید
+</button>
+
+</section>
+
 
 <div class="small">
-نسخه آزمایشی — پرداخت واقعی فعال نیست
-</div>
-
-</div>
-
-</div>
-
-
-<!-- GAME -->
-
-<div id="game" class="screen hidden">
-
-<div class="card">
-
-<h2>
-مأموریت <span id="missionNumber">1</span> از 10
-</h2>
-
-<div class="progress">
-<div id="progressBar" class="progressBar"></div>
-</div>
-
-<p id="story">
-تو وارد جنگلی ناشناخته شده‌ای.
-سه مسیر روبه‌رویت قرار دارد.
-</p>
-
-<button class="choice" onclick="choose(1)">
-🌲 وارد جنگل شوم
-</button>
-
-<button class="choice" onclick="choose(2)">
-🏚 به سمت کلبه بروم
-</button>
-
-<button class="choice" onclick="choose(3)">
-🔥 آتش روشن کنم
-</button>
-
-<div id="message" class="message">
-</div>
-
-<button id="nextButton"
-class="gold"
-onclick="nextMission()"
-disabled>
-ادامه مأموریت
-</button>
-
-</div>
-
-</div>
-
-
-<!-- UNLOCK -->
-
-<div id="unlock" class="screen hidden">
-
-<div class="card">
-
-<div class="door">
-🚪
-</div>
-
-<h2>
-دروازه ناشناخته
-</h2>
-
-<p>
-تو ۱۰ مأموریت را کامل کردی.
-</p>
-
-<p>
-سرزمین بعدی عمداً مخفی است.
-</p>
-
-<div class="price">
-2 USDT
-</div>
-
-<div class="small">
-در نسخه آزمایشی پرداخت واقعی انجام نمی‌شود.
-</div>
-
-<button class="start" onclick="demoEnter()">
-🔓 ورود آزمایشی
-</button>
-
-<button class="blue" onclick="goHome()">
-🏠 صفحه اصلی
-</button>
-
-</div>
-
-</div>
-
-
-<!-- RULES -->
-
-<div id="rules" class="screen hidden">
-
-<div class="card">
-
-<h2>
-🎮 قوانین WORLD VAULT
-</h2>
-
-<p>
-۱۰ مأموریت اول رایگان هستند.
-</p>
-
-<p>
-❤️ انتخاب درست می‌تواند جان بدهد.
-</p>
-
-<p>
-⭐ با مأموریت‌ها امتیاز جمع می‌کنی.
-</p>
-
-<p>
-🔐 مرحله بعد قبل از ورود نمایش داده نمی‌شود.
-</p>
-
-<p>
-💰 در نسخه اصلی ادامه بازی بعد از مأموریت ۱۰، ۲ USDT خواهد بود.
-</p>
-
-<button class="blue" onclick="goHome()">
-بازگشت
-</button>
-
-</div>
-
+WORLD VAULT MVP • 2026
 </div>
 
 </div>
@@ -371,191 +367,231 @@ disabled>
 
 <script>
 
-let mission = 1;
-let lives = 5;
-let score = 0;
+/* ذخیره اطلاعات بازیکن */
+
+let player =
+JSON.parse(localStorage.getItem("WORLD_VAULT_PLAYER") || "null");
 
 
-const stories = [
+/* شروع بازی */
 
-"صدای عجیبی از میان درختان می‌آید. چراغت را روشن می‌کنی...",
+function begin(){
 
-"ردپاهای بزرگی کنار رودخانه پیدا می‌کنی. کسی نمی‌داند متعلق به چیست...",
+const king =
+document.getElementById("king").value.trim();
 
-"ناگهان صدای بال‌زدن هزاران حشره از بالای درختان بلند می‌شود...",
+const kingdom =
+document.getElementById("kingdom").value.trim();
 
-"در دوردست یک نور مرموز دیده می‌شود...",
-
-"یک صندوق قدیمی وسط جنگل پیدا می‌کنی...",
-
-"صدای زنگی از داخل غار شنیده می‌شود...",
-
-"زمین زیر پایت برای چند لحظه می‌لرزد...",
-
-"یک دروازه سنگی در میان درختان ظاهر شده است...",
-
-"آسمان ناگهان تاریک می‌شود و صدایی ناشناس تو را صدا می‌زند...",
-
-"آخرین مأموریت تمام شد. مقابل یک دروازه عظیم ایستاده‌ای..."
-];
+const era =
+document.getElementById("era").value;
 
 
-function hideAll(){
+if(!king){
 
-document.getElementById("home").classList.add("hidden");
+alert("نام پادشاه را وارد کن.");
 
-document.getElementById("game").classList.add("hidden");
+return;
+}
 
-document.getElementById("unlock").classList.add("hidden");
 
-document.getElementById("rules").classList.add("hidden");
+if(!kingdom){
+
+alert("نام پادشاهی را وارد کن.");
+
+return;
+}
+
+
+player = {
+
+king:king,
+
+kingdom:kingdom,
+
+era:era,
+
+score:0,
+
+streak:1,
+
+boss:1000,
+
+missions:[]
+
+};
+
+
+save();
+
+render();
 
 }
 
 
-function goHome(){
+/* ذخیره */
 
-hideAll();
+function save(){
 
-document.getElementById("home").classList.remove("hidden");
-
-}
-
-
-function showRules(){
-
-hideAll();
-
-document.getElementById("rules").classList.remove("hidden");
-
-}
-
-
-function startGame(){
-
-mission = 1;
-
-lives = 5;
-
-score = 0;
-
-updateStats();
-
-showGame();
-
-}
-
-
-function showGame(){
-
-hideAll();
-
-document.getElementById("game").classList.remove("hidden");
-
-document.getElementById("missionNumber").innerText = mission;
-
-document.getElementById("story").innerText =
-stories[mission-1];
-
-document.getElementById("progressBar").style.width =
-(mission * 10) + "%";
-
-document.getElementById("message").innerHTML = "";
-
-document.getElementById("nextButton").disabled = true;
-
-}
-
-
-function choose(choice){
-
-let message =
-document.getElementById("message");
-
-
-if(choice === 1){
-
-score += 8;
-
-lives--;
-
-message.innerHTML =
-'<span class="bad">👣 مسیر خطرناک بود! +8 امتیاز و -1 جان</span>';
-
-}
-
-
-if(choice === 2){
-
-score += 15;
-
-message.innerHTML =
-'<span class="good">🔑 یک سرنخ پیدا کردی! +15 امتیاز</span>';
-
-}
-
-
-if(choice === 3){
-
-score += 10;
-
-lives++;
-
-message.innerHTML =
-'<span class="good">🔥 آتش تو را نجات داد! +1 جان و +10 امتیاز</span>';
-
-}
-
-
-updateStats();
-
-document.getElementById("nextButton").disabled = false;
-
-}
-
-
-function nextMission(){
-
-if(mission < 10){
-
-mission++;
-
-showGame();
-
-}
-
-else{
-
-hideAll();
-
-document.getElementById("unlock").classList.remove("hidden");
-
-}
-
-}
-
-
-function updateStats(){
-
-document.getElementById("lives").innerText = lives;
-
-document.getElementById("score").innerText = score;
-
-}
-
-
-function demoEnter(){
-
-alert(
-"🎉 دروازه باز شد!\n\n" +
-"مرحله بعد عمداً مخفی است.\n\n" +
-"در نسخه اصلی، بعد از پرداخت موفق، یک سرزمین ناشناخته برای بازیکن باز می‌شود."
+localStorage.setItem(
+"WORLD_VAULT_PLAYER",
+JSON.stringify(player)
 );
 
 }
 
 
-goHome();
+/* نمایش بازی */
+
+function render(){
+
+if(!player){
+
+return;
+
+}
+
+
+document.getElementById("setup").style.display="none";
+
+document.getElementById("game").style.display="block";
+
+
+document.getElementById("showKing").textContent=
+player.king;
+
+
+document.getElementById("showEra").textContent=
+"دوره " + player.era;
+
+
+document.getElementById("showKingdom").textContent=
+player.kingdom;
+
+
+document.getElementById("score").textContent=
+player.score;
+
+
+document.getElementById("myScore").textContent=
+player.score;
+
+
+document.getElementById("streak").textContent=
+player.streak;
+
+
+document.getElementById("boss").textContent=
+player.boss;
+
+
+/* رتبه آزمایشی */
+
+if(player.score >= 500){
+
+document.getElementById("rank").textContent="#2";
+
+}else{
+
+document.getElementById("rank").textContent="#3";
+
+}
+
+}
+
+
+/* گرفتن مأموریت */
+
+function claim(button,points){
+
+if(button.disabled){
+
+return;
+
+}
+
+
+button.disabled=true;
+
+button.textContent="✓";
+
+
+player.score += points;
+
+save();
+
+render();
+
+}
+
+
+/* حمله به World Boss */
+
+function attack(){
+
+if(player.boss <= 0){
+
+alert("🎉 World Boss شکست خورد!");
+
+return;
+
+}
+
+
+player.boss -= 100;
+
+player.score += 25;
+
+
+if(player.boss < 0){
+
+player.boss=0;
+
+}
+
+
+save();
+
+render();
+
+
+if(player.boss === 0){
+
+alert(
+"🏆 پیروزی!\n\n"+
+player.king+
+" توانست World Boss را شکست دهد!"
+);
+
+}
+
+}
+
+
+/* ساخت پادشاهی جدید */
+
+function newKingdom(){
+
+if(
+confirm(
+"آیا مطمئنی می‌خواهی پادشاهی جدید بسازی؟"
+)
+){
+
+localStorage.removeItem(
+"WORLD_VAULT_PLAYER"
+);
+
+location.reload();
+
+}
+
+}
+
+
+/* اجرای خودکار */
+
+render();
 
 </script>
 
