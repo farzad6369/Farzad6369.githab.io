@@ -1,307 +1,358 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fa" dir="rtl">
 <head>
-<meta charset="UTF-8">
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>WORLD VAULT</title>
+<title>Shadow Kingdom</title>
 
 <style>
 *{box-sizing:border-box}
 
-body{
-margin:0;
-font-family:Tahoma,Arial,sans-serif;
-color:white;
-background:linear-gradient(145deg,#070b18,#182441);
-min-height:100vh
+html,body{
+  margin:0;
+  height:100%;
+  overflow:hidden;
+  background:#050609;
+  font-family:Tahoma,Arial;
+  color:#fff
 }
 
-.app{
-max-width:520px;
-margin:auto;
-padding:18px
+.scene{
+  position:fixed;
+  inset:0;
+  background:url("market_scene.png") center/cover no-repeat
+}
+
+.shade{
+  position:fixed;
+  inset:0;
+  background:radial-gradient(circle,transparent 35%,#0009)
+}
+
+.top{
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  height:58px;
+  background:#070a0ddd;
+  border-bottom:1px solid #a27a35;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  padding:0 12px;
+  z-index:3
 }
 
 .logo{
-text-align:center;
-font-size:31px;
-font-weight:900;
-margin-top:10px
-}
-
-.tag{
-text-align:center;
-color:#aebce0;
-margin:8px 0 22px
-}
-
-.card{
-background:#ffffff10;
-border:1px solid #ffffff1c;
-border-radius:22px;
-padding:18px;
-margin:12px 0;
-box-shadow:0 12px 35px #0005
-}
-
-h2{
-margin:0 0 14px
-}
-
-.muted{
-color:#aeb9d4;
-font-size:13px
-}
-
-label{
-display:block;
-color:#c9d4ef;
-font-size:13px;
-margin-top:12px
-}
-
-input,select{
-width:100%;
-padding:14px;
-margin-top:6px;
-border-radius:13px;
-border:1px solid #3a4b72;
-background:#0d1427;
-color:white;
-font-size:15px
-}
-
-button{
-width:100%;
-border:0;
-border-radius:14px;
-padding:14px;
-margin-top:12px;
-background:linear-gradient(135deg,#f0c75e,#a96a18);
-font-weight:900;
-font-size:15px;
-cursor:pointer
-}
-
-button:disabled{
-opacity:.5
-}
-
-.hero{
-text-align:center
-}
-
-.crown{
-font-size:62px
-}
-
-.name{
-font-size:25px;
-font-weight:bold;
-margin:8px
+  color:#edcb70;
+  font-weight:bold
 }
 
 .stats{
-display:grid;
-grid-template-columns:repeat(3,1fr);
-gap:8px
+  display:flex;
+  gap:5px
 }
 
-.stat{
-background:#0d1427;
-border-radius:14px;
-padding:11px;
-text-align:center;
-font-size:12px
+.pill{
+  background:#151d28dd;
+  border:1px solid #536071;
+  border-radius:7px;
+  padding:6px 8px;
+  font-size:11px
 }
 
-.num{
-font-size:21px;
-font-weight:bold;
-margin-top:5px
+.hot{
+  position:fixed;
+  z-index:2;
+  border:1px solid transparent;
+  border-radius:12px;
+  cursor:pointer
 }
 
-.mission{
-display:flex;
-align-items:center;
-justify-content:space-between;
-gap:8px;
-background:#0d1427;
-padding:11px;
-border-radius:13px;
-margin:8px 0
+.hot:hover{
+  border-color:#e7bd5c;
+  background:#e7bd5c22
 }
 
-.mission button{
-width:auto;
-margin:0;
-padding:8px 12px
+.market{
+  left:15%;
+  bottom:18%;
+  width:25%;
+  height:35%
 }
 
-.rank{
-display:flex;
-justify-content:space-between;
-padding:11px;
-border-bottom:1px solid #ffffff12
+.arena{
+  left:40%;
+  bottom:25%;
+  width:20%;
+  height:28%
 }
 
-#game{
-display:none
+.shop{
+  right:8%;
+  bottom:20%;
+  width:22%;
+  height:35%
 }
 
-.small{
-font-size:11px;
-color:#7180a5;
-text-align:center;
-margin-top:20px
+.hero{
+  left:33%;
+  bottom:0;
+  width:34%;
+  height:42%
+}
+
+.tag{
+  position:absolute;
+  bottom:4px;
+  left:50%;
+  transform:translateX(-50%);
+  background:#080b0edd;
+  border:1px solid #a27a35;
+  border-radius:6px;
+  padding:5px 8px;
+  white-space:nowrap;
+  font-size:11px;
+  opacity:0
+}
+
+.hot:hover .tag{
+  opacity:1
+}
+
+.panel{
+  position:fixed;
+  top:70px;
+  width:210px;
+  background:#090f17ee;
+  border:1px solid #8b682f;
+  border-radius:10px;
+  padding:9px;
+  z-index:4;
+  font-size:11px
+}
+
+.left{left:9px}
+.right{right:9px}
+
+.panel h3{
+  margin:0 0 7px;
+  color:#edcb70
+}
+
+.item{
+  background:#151e29;
+  border:1px solid #334155;
+  border-radius:7px;
+  padding:7px;
+  margin:5px 0
+}
+
+button{
+  background:#b98b3d;
+  border:0;
+  border-radius:6px;
+  padding:7px 9px;
+  font-weight:bold;
+  margin-top:5px;
+  cursor:pointer
+}
+
+.bottom{
+  position:fixed;
+  bottom:0;
+  left:0;
+  right:0;
+  height:68px;
+  background:#070a0edd;
+  border-top:1px solid #8b682f;
+  z-index:5;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:8px
+}
+
+.slot{
+  width:47px;
+  height:47px;
+  border:1px solid #8b682f;
+  background:#131a24ee;
+  border-radius:8px;
+  display:grid;
+  place-items:center;
+  font-size:22px;
+  cursor:pointer
+}
+
+#modal{
+  display:none;
+  position:fixed;
+  inset:0;
+  background:#000b;
+  z-index:10;
+  align-items:center;
+  justify-content:center;
+  padding:15px
+}
+
+.box{
+  width:min(400px,100%);
+  background:#0d141e;
+  border:1px solid #b2863c;
+  border-radius:13px;
+  padding:15px
+}
+
+@media(max-width:700px){
+
+  .panel{
+    display:none
+  }
+
+  .top{
+    height:50px
+  }
+
+  .logo{
+    font-size:13px
+  }
+
+  .pill{
+    font-size:9px
+  }
+
+  .bottom{
+    height:62px
+  }
+
 }
 </style>
 </head>
 
 <body>
 
-<div class="app">
+<div class="scene"></div>
+<div class="shade"></div>
 
-<div class="logo">👑 WORLD VAULT</div>
+<div class="top">
 
-<div class="tag">
-Build your kingdom. Write your history.
-</div>
+  <div class="logo">
+    🏰 Shadow Kingdom · بازار پادشاهی
+  </div>
 
-<!-- ساخت پادشاه -->
-<section id="setup" class="card">
+  <div class="stats">
 
-<h2>🏛️ ساخت پادشاهی</h2>
+    <div class="pill">
+      👤 ShadowLord
+    </div>
 
-<div class="muted">
-تو خودت پادشاه این جهان هستی.
-</div>
+    <div class="pill">
+      🪙 <b id="coins">2500</b>
+    </div>
 
-<label>دوره تاریخی</label>
+    <div class="pill">
+      ❤️ <b id="lives">3</b>
+    </div>
 
-<select id="era">
+    <div class="pill">
+      💎 USDT 0
+    </div>
 
-<option value="هخامنشی">هخامنشی</option>
-<option value="اشکانی">اشکانی</option>
-<option value="ساسانی">ساسانی</option>
-<option value="سامانی">سامانی</option>
-<option value="سلجوقی">سلجوقی</option>
-<option value="خوارزمشاهی">خوارزمشاهی</option>
-<option value="ایلخانی">ایلخانی</option>
-<option value="تیموری">تیموری</option>
-<option value="صفوی">صفوی</option>
-<option value="افشاری">افشاری</option>
-<option value="زند">زند</option>
-
-</select>
-
-<label>نام پادشاه</label>
-
-<input
-id="king"
-maxlength="24"
-placeholder="مثلاً داریوش">
-
-<label>نام پادشاهی</label>
-
-<input
-id="kingdom"
-maxlength="28"
-placeholder="مثلاً خورشید پارس">
-
-<button onclick="begin()">
-👑 آغاز پادشاهی
-</button>
-
-</section>
-
-
-<!-- بازی -->
-
-<section id="game">
-
-<div class="card hero">
-
-<div class="crown">👑</div>
-
-<div class="name" id="showKing">
-—
-</div>
-
-<div class="muted" id="showEra">
-—
-</div>
-
-<div style="margin-top:10px">
-🏰
-<span id="showKingdom">—</span>
-</div>
+  </div>
 
 </div>
 
 
-<!-- آمار -->
+<!-- بازارچه -->
 
-<div class="stats">
+<div
+class="hot market"
+onclick="show(
+'🏺 بازارچه',
+'بازار زنده، فروشنده‌ها و مایحتاج روزانه.',
+'پرداخت واقعی و تتر در این نسخه فعال نیست.'
+)">
 
-<div class="stat">
-⭐ امتیاز
-<div class="num" id="score">0</div>
+<span class="tag">
+🏺 بازارچه
+</span>
+
 </div>
 
-<div class="stat">
-🔥 Streak
-<div class="num" id="streak">1</div>
+
+<!-- میدان نبرد -->
+
+<div
+class="hot arena"
+onclick="show(
+'⚔️ میدان نبرد',
+'مسابقه ۷۲ ساعته و مأموریت بین طرفین.',
+'نسخه آزمایشی؛ بدون پرداخت واقعی.'
+)">
+
+<span class="tag">
+⚔️ میدان نبرد
+</span>
+
 </div>
 
-<div class="stat">
-🏆 رتبه
-<div class="num" id="rank">#3</div>
+
+<!-- فروشگاه -->
+
+<div
+class="hot shop"
+onclick="show(
+'✨ فروشگاه',
+'تجهیزات و کالاهای ویژه.',
+'پرداخت واقعی غیرفعال است.'
+)">
+
+<span class="tag">
+✨ فروشگاه
+</span>
+
 </div>
+
+
+<!-- شخصیت -->
+
+<div
+class="hot hero"
+onclick="show(
+'👑 شخصیت اصلی',
+'ShadowLord · سطح 1',
+'تشکیل شخصیت پایه رایگان است.'
+)">
+
+<span class="tag">
+👑 شخصیت
+</span>
 
 </div>
 
 
 <!-- مأموریت -->
 
-<div class="card">
+<div class="panel left">
 
-<h2>🎯 مأموریت امروز</h2>
+<h3>
+📜 مأموریت
+</h3>
 
-<div class="mission">
+<div class="item">
 
-<span>
-📜 مطالعه یک رویداد تاریخی
-</span>
+مایحتاج روزانه را تهیه کن
 
-<button onclick="claim(this,20)">
-+20
-</button>
+<br>
 
-</div>
+پاداش: 300 🪙
 
+<br>
 
-<div class="mission">
-
-<span>
-🗺️ کشف یک سرزمین
-</span>
-
-<button onclick="claim(this,30)">
-+30
-</button>
-
-</div>
-
-
-<div class="mission">
-
-<span>
-⚔️ تمرین سپاه
-</span>
-
-<button onclick="claim(this,50)">
-+50
+<button onclick="mission()">
+انجام مأموریت
 </button>
 
 </div>
@@ -309,57 +360,86 @@ placeholder="مثلاً خورشید پارس">
 </div>
 
 
-<!-- باس -->
+<!-- بازیکنان -->
 
-<div class="card">
+<div class="panel right">
 
-<h2>🌋 World Boss</h2>
+<h3>
+👥 بازیکنان
+</h3>
 
-<div class="muted">
-قدرت Boss:
-<b id="boss">1000</b>
+<div class="item">
+⚔️ Ardashir · Lv12
 </div>
 
-<button onclick="attack()">
-⚔️ حمله به World Boss — +25
+<div class="item">
+🧙 Cyrus · Lv9
+</div>
+
+<div class="item">
+🏹 Rostam · Lv16
+</div>
+
+<div class="item">
+🔒 پرداخت واقعی غیرفعال
+</div>
+
+</div>
+
+
+<!-- منوی پایین -->
+
+<div class="bottom">
+
+<div
+class="slot"
+onclick="show(
+'🏺 بازارچه',
+'مایحتاج روزانه و معامله بازیکنان',
+'پرداخت واقعی غیرفعال است.'
+)">
+🏺
+</div>
+
+<div
+class="slot"
+onclick="mission()">
+📜
+</div>
+
+<div
+class="slot"
+onclick="battle()">
+⚔️
+</div>
+
+<div
+class="slot"
+onclick="show(
+'👤 شخصیت',
+'ShadowLord · سطح 1',
+'ارتقا در نسخه آزمایشی فعال نیست.'
+)">
+👤
+</div>
+
+</div>
+
+
+<!-- پنجره -->
+
+<div id="modal">
+
+<div class="box">
+
+<h2 id="mt"></h2>
+
+<div id="mc"></div>
+
+<button onclick="modal.style.display='none'">
+بستن
 </button>
 
-</div>
-
-
-<!-- رتبه بندی -->
-
-<div class="card">
-
-<h2>🏆 رتبه‌بندی</h2>
-
-<div class="rank">
-<span>🥇 شاه بزرگ</span>
-<b>1250</b>
-</div>
-
-<div class="rank">
-<span>🥈 فرمانروای شرق</span>
-<b>980</b>
-</div>
-
-<div class="rank">
-<span>🥉 تو</span>
-<b id="myScore">0</b>
-</div>
-
-</div>
-
-
-<button onclick="newKingdom()">
-🏰 پادشاهی جدید
-</button>
-
-</section>
-
-
-<div class="small">
-WORLD VAULT MVP • 2026
 </div>
 
 </div>
@@ -367,231 +447,97 @@ WORLD VAULT MVP • 2026
 
 <script>
 
-/* ذخیره اطلاعات بازیکن */
+let coins = 2500;
+let lives = 3;
 
-let player =
-JSON.parse(localStorage.getItem("WORLD_VAULT_PLAYER") || "null");
+const coinsEl =
+document.getElementById("coins");
 
+const livesEl =
+document.getElementById("lives");
 
-/* شروع بازی */
+function show(title,text1,text2){
 
-function begin(){
+document.getElementById("mt").textContent =
+title;
 
-const king =
-document.getElementById("king").value.trim();
+document.getElementById("mc").innerHTML =
+'<div class="item">'+text1+
+'</div><div class="item">'+text2+
+'</div>';
 
-const kingdom =
-document.getElementById("kingdom").value.trim();
+document.getElementById("modal")
+.style.display="flex";
 
-const era =
-document.getElementById("era").value;
+}
 
+function sync(){
 
-if(!king){
+coinsEl.textContent = coins;
 
-alert("نام پادشاه را وارد کن.");
+livesEl.textContent = lives;
+
+}
+
+function mission(){
+
+if(lives <= 0){
+
+alert("جان کافی نیست");
 
 return;
-}
-
-
-if(!kingdom){
-
-alert("نام پادشاهی را وارد کن.");
-
-return;
-}
-
-
-player = {
-
-king:king,
-
-kingdom:kingdom,
-
-era:era,
-
-score:0,
-
-streak:1,
-
-boss:1000,
-
-missions:[]
-
-};
-
-
-save();
-
-render();
 
 }
 
+lives--;
 
-/* ذخیره */
+coins += 300;
 
-function save(){
+sync();
 
-localStorage.setItem(
-"WORLD_VAULT_PLAYER",
-JSON.stringify(player)
+show(
+"📜 مأموریت کامل شد",
+"+300 سکه",
+"هیچ پرداخت واقعی انجام نشد."
 );
 
 }
 
+function battle(){
 
-/* نمایش بازی */
+if(lives <= 0){
 
-function render(){
-
-if(!player){
-
-return;
-
-}
-
-
-document.getElementById("setup").style.display="none";
-
-document.getElementById("game").style.display="block";
-
-
-document.getElementById("showKing").textContent=
-player.king;
-
-
-document.getElementById("showEra").textContent=
-"دوره " + player.era;
-
-
-document.getElementById("showKingdom").textContent=
-player.kingdom;
-
-
-document.getElementById("score").textContent=
-player.score;
-
-
-document.getElementById("myScore").textContent=
-player.score;
-
-
-document.getElementById("streak").textContent=
-player.streak;
-
-
-document.getElementById("boss").textContent=
-player.boss;
-
-
-/* رتبه آزمایشی */
-
-if(player.score >= 500){
-
-document.getElementById("rank").textContent="#2";
-
-}else{
-
-document.getElementById("rank").textContent="#3";
-
-}
-
-}
-
-
-/* گرفتن مأموریت */
-
-function claim(button,points){
-
-if(button.disabled){
+alert("جان کافی نیست");
 
 return;
 
 }
 
+lives--;
 
-button.disabled=true;
+coins += 500;
 
-button.textContent="✓";
+sync();
 
-
-player.score += points;
-
-save();
-
-render();
-
-}
-
-
-/* حمله به World Boss */
-
-function attack(){
-
-if(player.boss <= 0){
-
-alert("🎉 World Boss شکست خورد!");
-
-return;
-
-}
-
-
-player.boss -= 100;
-
-player.score += 25;
-
-
-if(player.boss < 0){
-
-player.boss=0;
-
-}
-
-
-save();
-
-render();
-
-
-if(player.boss === 0){
-
-alert(
-"🏆 پیروزی!\n\n"+
-player.king+
-" توانست World Boss را شکست دهد!"
+show(
+"⚔️ نبرد آزمایشی",
+"+500 سکه",
+"پرداخت واقعی غیرفعال است."
 );
 
 }
 
-}
+setInterval(function(){
 
+if(lives < 3){
 
-/* ساخت پادشاهی جدید */
+lives++;
 
-function newKingdom(){
-
-if(
-confirm(
-"آیا مطمئنی می‌خواهی پادشاهی جدید بسازی؟"
-)
-){
-
-localStorage.removeItem(
-"WORLD_VAULT_PLAYER"
-);
-
-location.reload();
+sync();
 
 }
 
-}
-
-
-/* اجرای خودکار */
-
-render();
+},3600000);
 
 </script>
 
